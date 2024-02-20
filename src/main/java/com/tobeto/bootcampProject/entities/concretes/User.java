@@ -1,23 +1,22 @@
-package com.tobeto.bootcampProject.core.entities;
+package com.tobeto.bootcampProject.entities.concretes;
 
+import com.tobeto.bootcampProject.core.entities.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@MappedSuperclass
-public class User<T> {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private T id;
-
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@Table(name = "users")
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+public class User extends BaseEntity<Integer> {
     @Column(name = "userName")
     private String userName;
 
