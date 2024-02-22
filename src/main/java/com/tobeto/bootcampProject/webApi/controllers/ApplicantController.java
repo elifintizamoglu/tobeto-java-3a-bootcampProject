@@ -9,6 +9,7 @@ import com.tobeto.bootcampProject.business.responses.get.applicant.GetAllApplica
 import com.tobeto.bootcampProject.business.responses.get.applicant.GetApplicantResponse;
 import com.tobeto.bootcampProject.business.responses.update.applicant.UpdateApplicantResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,24 +17,23 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/applicants")
 @AllArgsConstructor
-public class ApplicantController {
+public class ApplicantController extends BaseController {
 
     private ApplicantService applicantService;
 
     @PostMapping
-    public CreateApplicantResponse add(@RequestBody CreateApplicantRequest request) {
-        CreateApplicantResponse result = applicantService.add(request);
-        return result;
+    public ResponseEntity<?> add(@RequestBody CreateApplicantRequest request) {
+        return handleDataResult(applicantService.add(request));
     }
 
     @GetMapping("getAll")
-    public List<GetAllApplicantResponse> getAll() {
-        return applicantService.getAll();
+    public ResponseEntity<?> getAll() {
+        return handleDataResult(applicantService.getAll());
     }
 
     @GetMapping("getById/{id}")
-    public GetApplicantResponse getById(@PathVariable int id) {
-        return applicantService.getById(id);
+    public ResponseEntity<?> getById(@PathVariable int id) {
+        return  handleDataResult(applicantService.getById(id));
     }
 
     @DeleteMapping("delete/{id}")
