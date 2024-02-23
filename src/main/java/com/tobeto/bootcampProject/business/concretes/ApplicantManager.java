@@ -5,17 +5,17 @@ import com.tobeto.bootcampProject.business.constants.ApplicantMessages;
 import com.tobeto.bootcampProject.business.requests.create.applicant.CreateApplicantRequest;
 import com.tobeto.bootcampProject.business.requests.update.applicant.UpdateApplicantRequest;
 import com.tobeto.bootcampProject.business.responses.create.applicant.CreateApplicantResponse;
-import com.tobeto.bootcampProject.business.responses.delete.applicant.DeleteApplicantResponse;
 import com.tobeto.bootcampProject.business.responses.get.applicant.GetAllApplicantResponse;
 import com.tobeto.bootcampProject.business.responses.get.applicant.GetApplicantResponse;
 import com.tobeto.bootcampProject.business.responses.update.applicant.UpdateApplicantResponse;
 import com.tobeto.bootcampProject.core.utilities.mapping.ModelMapperService;
 import com.tobeto.bootcampProject.core.utilities.results.DataResult;
+import com.tobeto.bootcampProject.core.utilities.results.Result;
 import com.tobeto.bootcampProject.core.utilities.results.SuccessDataResult;
+import com.tobeto.bootcampProject.core.utilities.results.SuccessResult;
 import com.tobeto.bootcampProject.dataAccess.abstracts.ApplicantRepository;
 import com.tobeto.bootcampProject.entities.concretes.Applicant;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,25 +30,22 @@ public class ApplicantManager implements ApplicantService {
 
     @Override
     public DataResult<CreateApplicantResponse> add(CreateApplicantRequest request) {
+
         Applicant applicant = mapperService.forRequest().map(request, Applicant.class);
         applicantRepository.save(applicant);
+        CreateApplicantResponse response = mapperService.forResponse().map(applicant, CreateApplicantResponse.class);
 
-        CreateApplicantResponse response =
-                mapperService.forResponse().
-                        map(applicant, CreateApplicantResponse.class);
-
-        return new
-                SuccessDataResult<CreateApplicantResponse>(response, ApplicantMessages.ApplicantAdded);
+        return new SuccessDataResult<CreateApplicantResponse>(response, ApplicantMessages.ApplicantAdded);
     }
 
     @Override
     public DataResult<List<GetAllApplicantResponse>> getAll() {
-        List<Applicant> applicants = applicantRepository.findAll();
-        List<GetAllApplicantResponse> applicantResponses =
-                applicants.stream().map(applicant -> mapperService.forResponse()
-                        .map(applicant, GetAllApplicantResponse.class)).collect(Collectors.toList());
 
-        return new SuccessDataResult<List<GetAllApplicantResponse>>(applicantResponses,ApplicantMessages.ApplicantListed);
+        List<Applicant> applicants = applicantRepository.findAll();
+        List<GetAllApplicantResponse> applicantResponses = applicants.stream().map(applicant -> mapperService.forResponse()
+                .map(applicant, GetAllApplicantResponse.class)).collect(Collectors.toList());
+
+        return new SuccessDataResult<List<GetAllApplicantResponse>>(applicantResponses, ApplicantMessages.AllApplicantsListed);
     }
 
     @Override
@@ -56,18 +53,18 @@ public class ApplicantManager implements ApplicantService {
         Applicant applicant = applicantRepository.getById(id);
         GetApplicantResponse response = mapperService.forResponse()
                 .map(applicant, GetApplicantResponse.class);
-        return new SuccessDataResult<GetApplicantResponse>(response,ApplicantMessages.ApplicantListed);
+        return new SuccessDataResult<GetApplicantResponse>(response, ApplicantMessages.ApplicantListed);
     }
 
     @Override
-    public DeleteApplicantResponse delete(int id) {
-        applicantRepository.deleteById(id);
-        DeleteApplicantResponse response = new DeleteApplicantResponse("Applicant deleted.");
-        return response;
+    public Result delete(int id) {
+        Applicant applicant = applicantRepository.getById(id);
+        applicantRepository.delete(applicant);
+        return new SuccessResult(ApplicantMessages.ApplicantDeleted);
     }
 
     @Override
-    public UpdateApplicantResponse update(UpdateApplicantRequest request, int id) {
+    public DataResult<UpdateApplicantResponse> update(UpdateApplicantRequest request, int id) {
         Applicant applicant = applicantRepository.findById(id).orElseThrow();
 
         Applicant updatedApplicant = mapperService.forRequest().map(request, Applicant.class);
@@ -82,6 +79,6 @@ public class ApplicantManager implements ApplicantService {
         applicantRepository.save(applicant);
         UpdateApplicantResponse response = mapperService.forResponse().map(applicant, UpdateApplicantResponse.class);
 
-        return response;
+        return new SuccessDataResult<UpdateApplicantResponse>(response, ApplicantMessages.ApplicantUpdated);
     }
 }
