@@ -1,14 +1,18 @@
 package com.tobeto.bootcampProject.business.concretes;
 
 import com.tobeto.bootcampProject.business.abstracts.EmployeeService;
+import com.tobeto.bootcampProject.business.constants.EmployeeMessages;
 import com.tobeto.bootcampProject.business.requests.create.employee.CreateEmployeeRequest;
 import com.tobeto.bootcampProject.business.requests.update.employee.UpdateEmployeeRequest;
 import com.tobeto.bootcampProject.business.responses.create.employee.CreateEmployeeResponse;
-import com.tobeto.bootcampProject.business.responses.delete.employee.DeleteEmployeeResponse;
 import com.tobeto.bootcampProject.business.responses.get.employee.GetAllEmployeeResponse;
 import com.tobeto.bootcampProject.business.responses.get.employee.GetEmployeeResponse;
 import com.tobeto.bootcampProject.business.responses.update.employee.UpdateEmployeeResponse;
 import com.tobeto.bootcampProject.core.utilities.mapping.ModelMapperService;
+import com.tobeto.bootcampProject.core.utilities.results.DataResult;
+import com.tobeto.bootcampProject.core.utilities.results.Result;
+import com.tobeto.bootcampProject.core.utilities.results.SuccessDataResult;
+import com.tobeto.bootcampProject.core.utilities.results.SuccessResult;
 import com.tobeto.bootcampProject.dataAccess.abstracts.EmployeeRepository;
 import com.tobeto.bootcampProject.entities.concretes.Employee;
 import lombok.AllArgsConstructor;
@@ -25,43 +29,42 @@ public class EmployeeManager implements EmployeeService {
     private ModelMapperService mapperService;
 
     @Override
-    public CreateEmployeeResponse add(CreateEmployeeRequest request) {
+    public DataResult<CreateEmployeeResponse> add(CreateEmployeeRequest request) {
         Employee employee = mapperService.forRequest().map(request, Employee.class);
         employeeRepository.save(employee);
 
         CreateEmployeeResponse response = mapperService.forResponse().
                 map(employee, CreateEmployeeResponse.class);
 
-        return response;
+        return new SuccessDataResult<CreateEmployeeResponse>(response, EmployeeMessages.EmployeeAdded);
     }
 
     @Override
-    public List<GetAllEmployeeResponse> getAll() {
+    public DataResult<List<GetAllEmployeeResponse>> getAll() {
         List<Employee> employees = employeeRepository.findAll();
-        List<GetAllEmployeeResponse> employeeResponses =
-                employees.stream().map(employee -> mapperService.forResponse()
-                        .map(employee, GetAllEmployeeResponse.class)).collect(Collectors.toList());
+        List<GetAllEmployeeResponse> employeeResponses = employees.stream().map(employee -> mapperService.forResponse()
+                .map(employee, GetAllEmployeeResponse.class)).collect(Collectors.toList());
 
-        return employeeResponses;
+        return new SuccessDataResult<List<GetAllEmployeeResponse>>(employeeResponses, EmployeeMessages.AllEmployeesListed);
     }
 
     @Override
-    public GetEmployeeResponse getById(int id) {
+    public DataResult<GetEmployeeResponse> getById(int id) {
         Employee employee = employeeRepository.getById(id);
         GetEmployeeResponse response = mapperService.forResponse()
                 .map(employee, GetEmployeeResponse.class);
-        return response;
+        return new SuccessDataResult<GetEmployeeResponse>(response, EmployeeMessages.EmployeeListed);
     }
 
     @Override
-    public DeleteEmployeeResponse delete(int id) {
-        employeeRepository.deleteById(id);
-        DeleteEmployeeResponse response = new DeleteEmployeeResponse("Applicant deleted.");
-        return response;
+    public Result delete(int id) {
+        Employee employee = employeeRepository.getById(id);
+        employeeRepository.delete(employee);
+        return new SuccessResult(EmployeeMessages.EmployeeDeleted);
     }
 
     @Override
-    public UpdateEmployeeResponse update(UpdateEmployeeRequest request, int id) {
+    public DataResult<UpdateEmployeeResponse> update(UpdateEmployeeRequest request, int id) {
         Employee employee = employeeRepository.findById(id).orElseThrow();
 
         Employee updatedEmployee = mapperService.forRequest().map(request, Employee.class);
@@ -76,6 +79,6 @@ public class EmployeeManager implements EmployeeService {
         employeeRepository.save(employee);
         UpdateEmployeeResponse response = mapperService.forResponse().map(employee, UpdateEmployeeResponse.class);
 
-        return response;
+        return new SuccessDataResult<UpdateEmployeeResponse>(response, EmployeeMessages.EmployeeUpdated);
     }
 }

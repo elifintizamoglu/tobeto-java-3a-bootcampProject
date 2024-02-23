@@ -1,14 +1,18 @@
 package com.tobeto.bootcampProject.business.concretes;
 
 import com.tobeto.bootcampProject.business.abstracts.InstructorService;
+import com.tobeto.bootcampProject.business.constants.InstructorMessages;
 import com.tobeto.bootcampProject.business.requests.create.instructor.CreateInstructorRequest;
 import com.tobeto.bootcampProject.business.requests.update.instructor.UpdateInstructorRequest;
 import com.tobeto.bootcampProject.business.responses.create.instructor.CreateInstructorResponse;
-import com.tobeto.bootcampProject.business.responses.delete.instructor.DeleteInstructorResponse;
 import com.tobeto.bootcampProject.business.responses.get.instructor.GetAllInstructorResponse;
 import com.tobeto.bootcampProject.business.responses.get.instructor.GetInstructorResponse;
 import com.tobeto.bootcampProject.business.responses.update.instructor.UpdateInstructorResponse;
 import com.tobeto.bootcampProject.core.utilities.mapping.ModelMapperService;
+import com.tobeto.bootcampProject.core.utilities.results.DataResult;
+import com.tobeto.bootcampProject.core.utilities.results.Result;
+import com.tobeto.bootcampProject.core.utilities.results.SuccessDataResult;
+import com.tobeto.bootcampProject.core.utilities.results.SuccessResult;
 import com.tobeto.bootcampProject.dataAccess.abstracts.InstructorRepository;
 import com.tobeto.bootcampProject.entities.concretes.Instructor;
 import lombok.AllArgsConstructor;
@@ -25,42 +29,42 @@ public class InstructorManager implements InstructorService {
     private ModelMapperService mapperService;
 
     @Override
-    public CreateInstructorResponse add(CreateInstructorRequest request) {
+    public DataResult<CreateInstructorResponse> add(CreateInstructorRequest request) {
         Instructor instructor = mapperService.forRequest().map(request, Instructor.class);
         instructorRepository.save(instructor);
 
         CreateInstructorResponse response = mapperService.forResponse()
                 .map(instructor, CreateInstructorResponse.class);
-        return response;
+        return new SuccessDataResult<CreateInstructorResponse>(response, InstructorMessages.InstructorAdded);
     }
 
     @Override
-    public List<GetAllInstructorResponse> getAll() {
+    public DataResult<List<GetAllInstructorResponse>> getAll() {
         List<Instructor> instructors = instructorRepository.findAll();
         List<GetAllInstructorResponse> instructorResponses =
                 instructors.stream().map(instructor -> mapperService.forResponse()
                         .map(instructor, GetAllInstructorResponse.class)).collect(Collectors.toList());
 
-        return instructorResponses;
+        return new SuccessDataResult<List<GetAllInstructorResponse>>(instructorResponses, InstructorMessages.AllInstructorsListed);
     }
 
     @Override
-    public GetInstructorResponse getById(int id) {
+    public DataResult<GetInstructorResponse> getById(int id) {
         Instructor instructor = instructorRepository.getById(id);
         GetInstructorResponse response = mapperService.forResponse()
                 .map(instructor, GetInstructorResponse.class);
-        return response;
+        return new SuccessDataResult<GetInstructorResponse>(response, InstructorMessages.InstructorListed);
     }
 
     @Override
-    public DeleteInstructorResponse delete(int id) {
-        instructorRepository.deleteById(id);
-        DeleteInstructorResponse response = new DeleteInstructorResponse("Instructor deleted.");
-        return response;
+    public Result delete(int id) {
+        Instructor instructor = instructorRepository.getById(id);
+        instructorRepository.delete(instructor);
+        return new SuccessResult(InstructorMessages.InstructorDeleted);
     }
 
     @Override
-    public UpdateInstructorResponse update(UpdateInstructorRequest request, int id) {
+    public DataResult<UpdateInstructorResponse> update(UpdateInstructorRequest request, int id) {
         Instructor instructor = instructorRepository.findById(id).orElseThrow();
 
         Instructor updatedInstructor = mapperService.forRequest().map(request, Instructor.class);
@@ -75,6 +79,6 @@ public class InstructorManager implements InstructorService {
         instructorRepository.save(instructor);
         UpdateInstructorResponse response = mapperService.forResponse().map(instructor, UpdateInstructorResponse.class);
 
-        return response;
+        return new SuccessDataResult<UpdateInstructorResponse>(response,InstructorMessages.InstructorUpdated);
     }
 }
