@@ -19,12 +19,12 @@ public class ApplicantController extends BaseController {
         return handleDataResult(applicantService.add(request));
     }
 
-    @GetMapping("getAll")
+    @GetMapping("getall")
     public ResponseEntity<?> getAll() {
         return handleDataResult(applicantService.getAll());
     }
 
-    @GetMapping("getById/{id}")
+    @GetMapping("getbyid/{id}")
     public ResponseEntity<?> getById(@PathVariable int id) {
         return handleDataResult(applicantService.getById(id));
     }
