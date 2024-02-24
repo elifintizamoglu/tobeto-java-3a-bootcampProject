@@ -1,10 +1,7 @@
 package com.tobeto.bootcampProject.entities.concretes;
 
 import com.tobeto.bootcampProject.core.entities.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,15 +15,15 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 public class Application extends BaseEntity<Integer> {
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "applicantId")
     private Applicant applicant;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "bootcampId")
     private Bootcamp bootcamp;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "applicationStateId")
     private ApplicationState applicationState;
 }

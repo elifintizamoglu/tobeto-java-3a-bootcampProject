@@ -27,9 +27,9 @@ public class Bootcamp extends BaseEntity<Integer> {
     private LocalDate startDate;
 
     @Column(name = "endDate")
-    private  LocalDate endDate;
+    private LocalDate endDate;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "bootcampId")
     private BootcampState bootcampState;
 }
