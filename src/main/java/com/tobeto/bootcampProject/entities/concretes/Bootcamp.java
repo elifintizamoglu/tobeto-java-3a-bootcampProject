@@ -30,6 +30,6 @@ public class Bootcamp extends BaseEntity<Integer> {
     private LocalDate endDate;
 
     @ManyToOne
-    @JoinColumn(name = "bootcampId")
+    @JoinColumn(name = "bootcampStateId")
     private BootcampState bootcampState;
 }
