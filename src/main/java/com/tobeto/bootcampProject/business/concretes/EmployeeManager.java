@@ -65,18 +65,18 @@ public class EmployeeManager implements EmployeeService {
 
     @Override
     public DataResult<UpdateEmployeeResponse> update(UpdateEmployeeRequest request, int id) {
-        Employee employee = employeeRepository.findById(id).orElseThrow();
 
+        Employee employee = employeeRepository.findById(id).orElseThrow();
         Employee updatedEmployee = mapperService.forRequest().map(request, Employee.class);
-        employee.setId(id);
+
         employee.setFirstName(updatedEmployee.getFirstName() != null ? updatedEmployee.getFirstName() : employee.getFirstName());
         employee.setLastName(updatedEmployee.getLastName() != null ? updatedEmployee.getLastName() : employee.getLastName());
         employee.setPosition(updatedEmployee.getPosition() != null ? updatedEmployee.getPosition() : employee.getPosition());
         employee.setUserName(updatedEmployee.getUserName() != null ? updatedEmployee.getUserName() : employee.getUserName());
         employee.setNationalIdentity(updatedEmployee.getNationalIdentity() != null ? updatedEmployee.getNationalIdentity() : employee.getNationalIdentity());
         employee.setDateOfBirth((updatedEmployee.getDateOfBirth() != null ? updatedEmployee.getDateOfBirth() : employee.getDateOfBirth()));
-
         employeeRepository.save(employee);
+
         UpdateEmployeeResponse response = mapperService.forResponse().map(employee, UpdateEmployeeResponse.class);
 
         return new SuccessDataResult<UpdateEmployeeResponse>(response, EmployeeMessages.EmployeeUpdated);

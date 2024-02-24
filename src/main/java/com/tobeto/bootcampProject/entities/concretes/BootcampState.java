@@ -1,10 +1,7 @@
 package com.tobeto.bootcampProject.entities.concretes;
 
 import com.tobeto.bootcampProject.core.entities.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,7 +20,6 @@ public class BootcampState extends BaseEntity<Integer> {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "bootcampState")
+    @OneToMany(mappedBy = "bootcampState", cascade = CascadeType.REMOVE)
     private List<Bootcamp> bootcamps;
-
 }

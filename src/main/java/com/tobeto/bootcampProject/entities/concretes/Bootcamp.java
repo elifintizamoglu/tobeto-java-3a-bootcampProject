@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -32,4 +33,7 @@ public class Bootcamp extends BaseEntity<Integer> {
     @ManyToOne
     @JoinColumn(name = "bootcampStateId")
     private BootcampState bootcampState;
+
+    @OneToMany(mappedBy = "bootcamp")
+    private List<Application> applications;
 }

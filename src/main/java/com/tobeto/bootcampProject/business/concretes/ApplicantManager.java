@@ -65,18 +65,18 @@ public class ApplicantManager implements ApplicantService {
 
     @Override
     public DataResult<UpdateApplicantResponse> update(UpdateApplicantRequest request, int id) {
-        Applicant applicant = applicantRepository.findById(id).orElseThrow();
 
+        Applicant applicant = applicantRepository.findById(id).orElseThrow();
         Applicant updatedApplicant = mapperService.forRequest().map(request, Applicant.class);
-        applicant.setId(id);
+
         applicant.setFirstName(updatedApplicant.getFirstName() != null ? updatedApplicant.getFirstName() : applicant.getFirstName());
         applicant.setLastName(updatedApplicant.getLastName() != null ? updatedApplicant.getLastName() : applicant.getLastName());
         applicant.setAbout(updatedApplicant.getAbout() != null ? updatedApplicant.getAbout() : applicant.getAbout());
         applicant.setUserName(updatedApplicant.getUserName() != null ? updatedApplicant.getUserName() : applicant.getUserName());
         applicant.setNationalIdentity(updatedApplicant.getNationalIdentity() != null ? updatedApplicant.getNationalIdentity() : applicant.getNationalIdentity());
         applicant.setDateOfBirth((updatedApplicant.getDateOfBirth() != null ? updatedApplicant.getDateOfBirth() : applicant.getDateOfBirth()));
-
         applicantRepository.save(applicant);
+
         UpdateApplicantResponse response = mapperService.forResponse().map(applicant, UpdateApplicantResponse.class);
 
         return new SuccessDataResult<UpdateApplicantResponse>(response, ApplicantMessages.ApplicantUpdated);
