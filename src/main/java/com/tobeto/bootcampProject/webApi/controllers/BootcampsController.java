@@ -3,6 +3,7 @@ package com.tobeto.bootcampProject.webApi.controllers;
 import com.tobeto.bootcampProject.business.abstracts.BootcampService;
 import com.tobeto.bootcampProject.business.requests.create.bootcamp.CreateBootcampRequest;
 import com.tobeto.bootcampProject.business.requests.update.bootcamp.UpdateBootcampRequest;
+import com.tobeto.bootcampProject.core.utilities.paging.PageDto;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,5 +38,10 @@ public class BootcampsController extends BaseController {
     @PutMapping("update/{id}")
     public ResponseEntity<?> update(@RequestBody UpdateBootcampRequest request, @PathVariable int id) {
         return handleDataResult(bootcampService.update(request, id));
+    }
+
+    @GetMapping("sort")
+    public ResponseEntity<?> getAllPage(@RequestBody PageDto pageDto) {
+        return handleDataResult(bootcampService.getAllPage(pageDto));
     }
 }

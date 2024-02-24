@@ -3,6 +3,7 @@ package com.tobeto.bootcampProject.webApi.controllers;
 import com.tobeto.bootcampProject.business.abstracts.BootcampStateService;
 import com.tobeto.bootcampProject.business.requests.create.bootcampState.CreateBootcampStateRequest;
 import com.tobeto.bootcampProject.business.requests.update.bootcampState.UpdateBootcampStateRequest;
+import com.tobeto.bootcampProject.core.utilities.paging.PageDto;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,4 +39,11 @@ public class BootcampStatesController extends BaseController {
     public ResponseEntity<?> update(@RequestBody UpdateBootcampStateRequest request, @PathVariable int id) {
         return handleDataResult(bootcampStateService.update(request, id));
     }
+
+    @GetMapping("sort")
+    public ResponseEntity<?> getAllPage(@RequestBody PageDto pageDto) {
+        return handleDataResult(bootcampStateService.getAllPage(pageDto));
+    }
+
+
 }

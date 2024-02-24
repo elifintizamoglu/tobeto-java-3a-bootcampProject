@@ -9,6 +9,7 @@ import com.tobeto.bootcampProject.business.responses.get.applicationState.GetAll
 import com.tobeto.bootcampProject.business.responses.get.applicationState.GetApplicationStateResponse;
 import com.tobeto.bootcampProject.business.responses.update.applicationState.UpdateApplicationStateResponse;
 import com.tobeto.bootcampProject.core.utilities.mapping.ModelMapperService;
+import com.tobeto.bootcampProject.core.utilities.paging.PageDto;
 import com.tobeto.bootcampProject.core.utilities.results.DataResult;
 import com.tobeto.bootcampProject.core.utilities.results.Result;
 import com.tobeto.bootcampProject.core.utilities.results.SuccessDataResult;
@@ -16,6 +17,10 @@ import com.tobeto.bootcampProject.core.utilities.results.SuccessResult;
 import com.tobeto.bootcampProject.dataAccess.abstracts.ApplicationStateRepository;
 import com.tobeto.bootcampProject.entities.concretes.ApplicationState;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -78,5 +83,14 @@ public class ApplicationStateManager implements ApplicationStateService {
         UpdateApplicationStateResponse response = mapperService.forResponse().map(applicationState, UpdateApplicationStateResponse.class);
 
         return new SuccessDataResult<UpdateApplicationStateResponse>(response, ApplicationStateMessages.ApplicationStateUpdated);
+    }
+
+    @Override
+    public DataResult<List<GetAllApplicationStateResponse>> getAllPage(PageDto pageDto) {
+        Sort sort = Sort.by(Sort.Direction.fromString(pageDto.getSortDirection()), pageDto.getSortBy());
+        Pageable pageable = PageRequest.of(pageDto.getPageNumber(), pageDto.getPageSize(), sort);
+        Page<ApplicationState> applicationStates = applicationStateRepository.findAll(pageable);
+        List<GetAllApplicationStateResponse> responses = applicationStates.stream().map(applicationState -> mapperService.forResponse().map(applicationState, GetAllApplicationStateResponse.class)).toList();
+        return new SuccessDataResult<List<GetAllApplicationStateResponse>>(responses);
     }
 }

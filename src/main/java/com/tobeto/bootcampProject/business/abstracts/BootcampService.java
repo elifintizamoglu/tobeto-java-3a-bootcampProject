@@ -6,6 +6,7 @@ import com.tobeto.bootcampProject.business.responses.create.bootcamp.CreateBootc
 import com.tobeto.bootcampProject.business.responses.get.bootcamp.GetAllBootcampResponse;
 import com.tobeto.bootcampProject.business.responses.get.bootcamp.GetBootcampResponse;
 import com.tobeto.bootcampProject.business.responses.update.bootcamp.UpdateBootcampResponse;
+import com.tobeto.bootcampProject.core.utilities.paging.PageDto;
 import com.tobeto.bootcampProject.core.utilities.results.DataResult;
 import com.tobeto.bootcampProject.core.utilities.results.Result;
 
@@ -22,4 +23,6 @@ public interface BootcampService {
     Result delete(int id);
 
     DataResult<UpdateBootcampResponse> update(UpdateBootcampRequest request, int id);
+
+    DataResult<List<GetAllBootcampResponse>> getAllPage(PageDto pageDto);
 }

@@ -7,6 +7,7 @@ import com.tobeto.bootcampProject.business.responses.create.instructor.CreateIns
 import com.tobeto.bootcampProject.business.responses.get.instructor.GetAllInstructorResponse;
 import com.tobeto.bootcampProject.business.responses.get.instructor.GetInstructorResponse;
 import com.tobeto.bootcampProject.business.responses.update.instructor.UpdateInstructorResponse;
+import com.tobeto.bootcampProject.core.utilities.paging.PageDto;
 import com.tobeto.bootcampProject.core.utilities.results.DataResult;
 import com.tobeto.bootcampProject.core.utilities.results.Result;
 
@@ -22,4 +23,5 @@ public interface InstructorService {
     Result delete(int id);
 
     DataResult<UpdateInstructorResponse> update(UpdateInstructorRequest request, int id);
+    DataResult<List<GetAllInstructorResponse>> getAllPage(PageDto pageDto);
 }

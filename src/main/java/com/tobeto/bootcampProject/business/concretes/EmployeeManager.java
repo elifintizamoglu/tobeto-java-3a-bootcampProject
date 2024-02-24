@@ -9,6 +9,7 @@ import com.tobeto.bootcampProject.business.responses.get.employee.GetAllEmployee
 import com.tobeto.bootcampProject.business.responses.get.employee.GetEmployeeResponse;
 import com.tobeto.bootcampProject.business.responses.update.employee.UpdateEmployeeResponse;
 import com.tobeto.bootcampProject.core.utilities.mapping.ModelMapperService;
+import com.tobeto.bootcampProject.core.utilities.paging.PageDto;
 import com.tobeto.bootcampProject.core.utilities.results.DataResult;
 import com.tobeto.bootcampProject.core.utilities.results.Result;
 import com.tobeto.bootcampProject.core.utilities.results.SuccessDataResult;
@@ -16,6 +17,10 @@ import com.tobeto.bootcampProject.core.utilities.results.SuccessResult;
 import com.tobeto.bootcampProject.dataAccess.abstracts.EmployeeRepository;
 import com.tobeto.bootcampProject.entities.concretes.Employee;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -80,5 +85,14 @@ public class EmployeeManager implements EmployeeService {
         UpdateEmployeeResponse response = mapperService.forResponse().map(employee, UpdateEmployeeResponse.class);
 
         return new SuccessDataResult<UpdateEmployeeResponse>(response, EmployeeMessages.EmployeeUpdated);
+    }
+
+    @Override
+    public DataResult<List<GetAllEmployeeResponse>> getAllPage(PageDto pageDto) {
+        Sort sort = Sort.by(Sort.Direction.fromString(pageDto.getSortDirection()), pageDto.getSortBy());
+        Pageable pageable = PageRequest.of(pageDto.getPageNumber(), pageDto.getPageSize(), sort);
+        Page<Employee> employees = employeeRepository.findAll(pageable);
+        List<GetAllEmployeeResponse> responses = employees.stream().map(employee -> mapperService.forResponse().map(employee, GetAllEmployeeResponse.class)).toList();
+        return new SuccessDataResult<List<GetAllEmployeeResponse>>(responses);
     }
 }

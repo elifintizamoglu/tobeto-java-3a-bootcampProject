@@ -9,6 +9,7 @@ import com.tobeto.bootcampProject.business.responses.get.bootcamp.GetAllBootcamp
 import com.tobeto.bootcampProject.business.responses.get.bootcamp.GetBootcampResponse;
 import com.tobeto.bootcampProject.business.responses.update.bootcamp.UpdateBootcampResponse;
 import com.tobeto.bootcampProject.core.utilities.mapping.ModelMapperService;
+import com.tobeto.bootcampProject.core.utilities.paging.PageDto;
 import com.tobeto.bootcampProject.core.utilities.results.DataResult;
 import com.tobeto.bootcampProject.core.utilities.results.Result;
 import com.tobeto.bootcampProject.core.utilities.results.SuccessDataResult;
@@ -16,6 +17,10 @@ import com.tobeto.bootcampProject.core.utilities.results.SuccessResult;
 import com.tobeto.bootcampProject.dataAccess.abstracts.BootcampRepository;
 import com.tobeto.bootcampProject.entities.concretes.Bootcamp;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -77,5 +82,14 @@ public class BootcampManager implements BootcampService {
 
         UpdateBootcampResponse response = mapperService.forResponse().map(bootcamp, UpdateBootcampResponse.class);
         return new SuccessDataResult<UpdateBootcampResponse>(response, BootcampMessages.BootcampUpdated);
+    }
+
+    @Override
+    public DataResult<List<GetAllBootcampResponse>> getAllPage(PageDto pageDto) {
+        Sort sort = Sort.by(Sort.Direction.fromString(pageDto.getSortDirection()), pageDto.getSortBy());
+        Pageable pageable = PageRequest.of(pageDto.getPageNumber(), pageDto.getPageSize(), sort);
+        Page<Bootcamp> bootcamps = bootcampRepository.findAll(pageable);
+        List<GetAllBootcampResponse> responses = bootcamps.stream().map(bootcamp -> mapperService.forResponse().map(bootcamp, GetAllBootcampResponse.class)).toList();
+        return new SuccessDataResult<List<GetAllBootcampResponse>>(responses);
     }
 }

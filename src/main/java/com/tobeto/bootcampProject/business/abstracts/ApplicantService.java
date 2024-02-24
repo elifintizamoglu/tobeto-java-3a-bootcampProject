@@ -6,6 +6,7 @@ import com.tobeto.bootcampProject.business.responses.create.applicant.CreateAppl
 import com.tobeto.bootcampProject.business.responses.get.applicant.GetAllApplicantResponse;
 import com.tobeto.bootcampProject.business.responses.get.applicant.GetApplicantResponse;
 import com.tobeto.bootcampProject.business.responses.update.applicant.UpdateApplicantResponse;
+import com.tobeto.bootcampProject.core.utilities.paging.PageDto;
 import com.tobeto.bootcampProject.core.utilities.results.DataResult;
 import com.tobeto.bootcampProject.core.utilities.results.Result;
 
@@ -21,5 +22,7 @@ public interface ApplicantService {
     Result delete(int id);
 
     DataResult<UpdateApplicantResponse> update(UpdateApplicantRequest request, int id);
+
+    DataResult<List<GetAllApplicantResponse>> getAllPage(PageDto pageDto);
 
 }

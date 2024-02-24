@@ -3,6 +3,7 @@ package com.tobeto.bootcampProject.webApi.controllers;
 import com.tobeto.bootcampProject.business.abstracts.ApplicationStateService;
 import com.tobeto.bootcampProject.business.requests.create.applicationState.CreateApplicationStateRequest;
 import com.tobeto.bootcampProject.business.requests.update.applicationState.UpdateApplicationStateRequest;
+import com.tobeto.bootcampProject.core.utilities.paging.PageDto;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +38,11 @@ public class ApplicationStatesController extends BaseController {
     @PutMapping("update/{id}")
     public ResponseEntity<?> update(@RequestBody UpdateApplicationStateRequest request, @PathVariable int id) {
         return handleDataResult(applicationStateService.update(request, id));
+    }
+
+    @GetMapping("sort")
+    public ResponseEntity<?> getAllPage(@RequestBody PageDto pageDto){
+        return handleDataResult(applicationStateService.getAllPage(pageDto));
     }
 
 }

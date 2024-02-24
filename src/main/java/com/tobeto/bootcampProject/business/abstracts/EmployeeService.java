@@ -6,6 +6,7 @@ import com.tobeto.bootcampProject.business.responses.create.employee.CreateEmplo
 import com.tobeto.bootcampProject.business.responses.get.employee.GetAllEmployeeResponse;
 import com.tobeto.bootcampProject.business.responses.get.employee.GetEmployeeResponse;
 import com.tobeto.bootcampProject.business.responses.update.employee.UpdateEmployeeResponse;
+import com.tobeto.bootcampProject.core.utilities.paging.PageDto;
 import com.tobeto.bootcampProject.core.utilities.results.DataResult;
 import com.tobeto.bootcampProject.core.utilities.results.Result;
 
@@ -21,4 +22,6 @@ public interface EmployeeService {
     Result delete(int id);
 
     DataResult<UpdateEmployeeResponse> update(UpdateEmployeeRequest request, int id);
+
+    DataResult<List<GetAllEmployeeResponse>> getAllPage(PageDto pageDto);
 }

@@ -6,6 +6,7 @@ import com.tobeto.bootcampProject.business.responses.create.applicationState.Cre
 import com.tobeto.bootcampProject.business.responses.get.applicationState.GetAllApplicationStateResponse;
 import com.tobeto.bootcampProject.business.responses.get.applicationState.GetApplicationStateResponse;
 import com.tobeto.bootcampProject.business.responses.update.applicationState.UpdateApplicationStateResponse;
+import com.tobeto.bootcampProject.core.utilities.paging.PageDto;
 import com.tobeto.bootcampProject.core.utilities.results.DataResult;
 import com.tobeto.bootcampProject.core.utilities.results.Result;
 
@@ -22,4 +23,6 @@ public interface ApplicationStateService {
     Result delete(int id);
 
     DataResult<UpdateApplicationStateResponse> update(UpdateApplicationStateRequest request, int id);
+
+    DataResult<List<GetAllApplicationStateResponse>> getAllPage(PageDto pageDto);
 }

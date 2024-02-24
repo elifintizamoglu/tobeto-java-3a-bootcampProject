@@ -3,6 +3,7 @@ package com.tobeto.bootcampProject.webApi.controllers;
 import com.tobeto.bootcampProject.business.abstracts.InstructorService;
 import com.tobeto.bootcampProject.business.requests.create.instructor.CreateInstructorRequest;
 import com.tobeto.bootcampProject.business.requests.update.instructor.UpdateInstructorRequest;
+import com.tobeto.bootcampProject.core.utilities.paging.PageDto;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,4 +39,10 @@ public class InstructorsController extends BaseController {
     public ResponseEntity<?> update(@RequestBody UpdateInstructorRequest request, @PathVariable int id) {
         return handleDataResult(instructorService.update(request, id));
     }
+
+    @GetMapping("sort")
+    public ResponseEntity<?> getAllPage(@RequestBody PageDto pageDto) {
+        return handleDataResult(instructorService.getAllPage(pageDto));
+    }
+
 }
