@@ -11,6 +11,7 @@ public class CreateInstructorResponse {private int id;
     private String userName;
     private String firstName;
     private String lastName;
+    private String email;
     private String companyName;
 
 }

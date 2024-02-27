@@ -1,6 +1,7 @@
 package com.tobeto.bootcampProject.business.concretes;
 
 import com.tobeto.bootcampProject.business.abstracts.EmployeeService;
+import com.tobeto.bootcampProject.business.abstracts.UserService;
 import com.tobeto.bootcampProject.business.constants.EmployeeMessages;
 import com.tobeto.bootcampProject.business.requests.create.employee.CreateEmployeeRequest;
 import com.tobeto.bootcampProject.business.requests.update.employee.UpdateEmployeeRequest;
@@ -8,6 +9,7 @@ import com.tobeto.bootcampProject.business.responses.create.employee.CreateEmplo
 import com.tobeto.bootcampProject.business.responses.get.employee.GetAllEmployeeResponse;
 import com.tobeto.bootcampProject.business.responses.get.employee.GetEmployeeResponse;
 import com.tobeto.bootcampProject.business.responses.update.employee.UpdateEmployeeResponse;
+import com.tobeto.bootcampProject.core.exceptions.types.BusinessException;
 import com.tobeto.bootcampProject.core.utilities.mapping.ModelMapperService;
 import com.tobeto.bootcampProject.core.utilities.paging.PageDto;
 import com.tobeto.bootcampProject.core.utilities.results.DataResult;
@@ -28,13 +30,16 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class EmployeeManager implements EmployeeService {
+public class EmployeeManager implements EmployeeService, UserService {
 
     private EmployeeRepository employeeRepository;
     private ModelMapperService mapperService;
 
     @Override
     public DataResult<CreateEmployeeResponse> add(CreateEmployeeRequest request) {
+
+        checkIfEmailExists(request.getEmail());
+
         Employee employee = mapperService.forRequest().map(request, Employee.class);
         employeeRepository.save(employee);
 
@@ -94,5 +99,13 @@ public class EmployeeManager implements EmployeeService {
         Page<Employee> employees = employeeRepository.findAll(pageable);
         List<GetAllEmployeeResponse> responses = employees.stream().map(employee -> mapperService.forResponse().map(employee, GetAllEmployeeResponse.class)).toList();
         return new SuccessDataResult<List<GetAllEmployeeResponse>>(responses);
+    }
+
+    @Override
+    public void checkIfEmailExists(String email) {
+        Employee employee = employeeRepository.getByEmail(email.trim());
+        if(employee != null){
+            throw new BusinessException("This email is already used!");
+        }
     }
 }
