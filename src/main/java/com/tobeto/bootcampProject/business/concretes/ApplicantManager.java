@@ -71,14 +71,15 @@ public class ApplicantManager implements ApplicantService {
     }
 
     @Override
-    public DataResult<UpdateApplicantResponse> update(UpdateApplicantRequest request, int id) {
+    public DataResult<UpdateApplicantResponse> update(UpdateApplicantRequest request) {
 
-        Applicant applicant = applicantRepository.findById(id).orElseThrow();
+        Applicant applicant = applicantRepository.findById(request.getId()).orElseThrow();
         Applicant updatedApplicant = mapperService.forRequest().map(request, Applicant.class);
 
         applicant.setFirstName(updatedApplicant.getFirstName() != null ? updatedApplicant.getFirstName() : applicant.getFirstName());
         applicant.setLastName(updatedApplicant.getLastName() != null ? updatedApplicant.getLastName() : applicant.getLastName());
         applicant.setAbout(updatedApplicant.getAbout() != null ? updatedApplicant.getAbout() : applicant.getAbout());
+        applicant.setEmail(updatedApplicant.getEmail() != null ? updatedApplicant.getEmail() : applicant.getEmail());
         applicant.setUserName(updatedApplicant.getUserName() != null ? updatedApplicant.getUserName() : applicant.getUserName());
         applicant.setNationalIdentity(updatedApplicant.getNationalIdentity() != null ? updatedApplicant.getNationalIdentity() : applicant.getNationalIdentity());
         applicant.setDateOfBirth((updatedApplicant.getDateOfBirth() != null ? updatedApplicant.getDateOfBirth() : applicant.getDateOfBirth()));
@@ -100,7 +101,7 @@ public class ApplicantManager implements ApplicantService {
 
     public void checkIfEmailExists(String email) {
         Applicant applicant = applicantRepository.getByEmail(email.trim());
-        if(applicant != null){
+        if (applicant != null) {
             throw new BusinessException("This email is already used!");
         }
     }

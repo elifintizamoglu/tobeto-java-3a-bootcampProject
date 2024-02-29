@@ -35,9 +35,9 @@ public class ApplicationsController extends BaseController {
         return handleResult(applicationService.delete(id));
     }
 
-    @PutMapping("update/{id}")
-    public ResponseEntity<?> update(@RequestBody UpdateApplicationRequest request, @PathVariable int id) {
-        return handleDataResult(applicationService.update(request, id));
+    @PutMapping("update")
+    public ResponseEntity<?> update(@RequestBody UpdateApplicationRequest request) {
+        return handleDataResult(applicationService.update(request));
     }
 
     @GetMapping("sort")

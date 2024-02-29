@@ -36,9 +36,9 @@ public class ApplicantsController extends BaseController {
         return handleResult(applicantService.delete(id));
     }
 
-    @PutMapping("update/{id}")
-    public ResponseEntity<?> update(@RequestBody UpdateApplicantRequest request, @PathVariable int id) {
-        return handleDataResult(applicantService.update(request, id));
+    @PutMapping("update")
+    public ResponseEntity<?> update(@RequestBody UpdateApplicantRequest request) {
+        return handleDataResult(applicantService.update(request));
     }
 
     @GetMapping("sort")

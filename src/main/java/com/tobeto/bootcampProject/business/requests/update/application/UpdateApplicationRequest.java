@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateApplicationRequest {
+    private int id;
     private int applicantId;
     private int bootcampId;
     private int applicationStateId;

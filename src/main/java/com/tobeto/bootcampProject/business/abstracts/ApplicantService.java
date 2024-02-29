@@ -21,7 +21,7 @@ public interface ApplicantService {
 
     Result delete(int id);
 
-    DataResult<UpdateApplicantResponse> update(UpdateApplicantRequest request, int id);
+    DataResult<UpdateApplicantResponse> update(UpdateApplicantRequest request);
 
     DataResult<List<GetAllApplicantResponse>> getAllPage(PageDto pageDto);
 
