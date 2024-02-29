@@ -1,9 +1,6 @@
 package com.tobeto.bootcampProject.entities.concretes;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,4 +17,7 @@ public class Applicant extends User {
 
     @Column(name = "about")
     private String about;
+
+    @OneToOne(mappedBy = "applicant")
+    private Blacklist blacklist;
 }

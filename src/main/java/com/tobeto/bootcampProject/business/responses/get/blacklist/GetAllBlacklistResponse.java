@@ -12,5 +12,5 @@ import java.time.LocalDateTime;
 public class GetAllBlacklistResponse {
     private String reason;
     private LocalDateTime date;
-    private int applicant_id;
+    private int applicantId;
 }

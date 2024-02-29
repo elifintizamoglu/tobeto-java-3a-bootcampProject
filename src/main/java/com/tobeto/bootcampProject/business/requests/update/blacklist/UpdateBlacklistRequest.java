@@ -12,5 +12,5 @@ import java.time.LocalDateTime;
 public class UpdateBlacklistRequest {
     private String reason;
     private LocalDateTime date;
-    private int applicant_id;
+    private int applicantId;
 }

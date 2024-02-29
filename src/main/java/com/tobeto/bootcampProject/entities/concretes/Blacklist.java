@@ -10,13 +10,18 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "blacklists")
-@EqualsAndHashCode(callSuper = true)
-public class Blacklist extends BaseEntity<Integer>{
+public class Blacklist extends BaseEntity<Integer> {
+
+    /*@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id")
+    private int id;*/
 
     @Column(name = "reason")
     private String reason;
