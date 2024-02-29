@@ -1,5 +1,6 @@
 package com.tobeto.bootcampProject.entities.concretes;
 
+import com.tobeto.bootcampProject.core.entities.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,8 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "blacklists")
 @EqualsAndHashCode(callSuper = true)
-@PrimaryKeyJoinColumn(name = "id")
-public class Blacklist extends Applicant {
+public class Blacklist extends BaseEntity<Integer>{
 
     @Column(name = "reason")
     private String reason;

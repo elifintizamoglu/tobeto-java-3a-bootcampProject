@@ -1,7 +1,6 @@
 package com.tobeto.bootcampProject.business.concretes;
 
 import com.tobeto.bootcampProject.business.abstracts.EmployeeService;
-import com.tobeto.bootcampProject.business.abstracts.UserService;
 import com.tobeto.bootcampProject.business.constants.EmployeeMessages;
 import com.tobeto.bootcampProject.business.requests.create.employee.CreateEmployeeRequest;
 import com.tobeto.bootcampProject.business.requests.update.employee.UpdateEmployeeRequest;
@@ -30,7 +29,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class EmployeeManager implements EmployeeService, UserService {
+public class EmployeeManager implements EmployeeService {
 
     private EmployeeRepository employeeRepository;
     private ModelMapperService mapperService;
@@ -101,7 +100,6 @@ public class EmployeeManager implements EmployeeService, UserService {
         return new SuccessDataResult<List<GetAllEmployeeResponse>>(responses);
     }
 
-    @Override
     public void checkIfEmailExists(String email) {
         Employee employee = employeeRepository.getByEmail(email.trim());
         if(employee != null){

@@ -17,6 +17,7 @@ import java.time.LocalDate;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User extends BaseEntity<Integer> {
+
     @Column(name = "userName")
     private String userName;
 

@@ -1,7 +1,6 @@
 package com.tobeto.bootcampProject.business.concretes;
 
 import com.tobeto.bootcampProject.business.abstracts.ApplicantService;
-import com.tobeto.bootcampProject.business.abstracts.UserService;
 import com.tobeto.bootcampProject.business.constants.ApplicantMessages;
 import com.tobeto.bootcampProject.business.requests.create.applicant.CreateApplicantRequest;
 import com.tobeto.bootcampProject.business.requests.update.applicant.UpdateApplicantRequest;
@@ -30,7 +29,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class ApplicantManager implements ApplicantService, UserService {
+public class ApplicantManager implements ApplicantService {
 
     private ApplicantRepository applicantRepository;
     private ModelMapperService mapperService;
@@ -99,7 +98,6 @@ public class ApplicantManager implements ApplicantService, UserService {
         return new SuccessDataResult<List<GetAllApplicantResponse>>(responses);
     }
 
-    @Override
     public void checkIfEmailExists(String email) {
         Applicant applicant = applicantRepository.getByEmail(email.trim());
         if(applicant != null){

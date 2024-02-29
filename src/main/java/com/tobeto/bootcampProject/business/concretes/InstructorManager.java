@@ -1,7 +1,6 @@
 package com.tobeto.bootcampProject.business.concretes;
 
 import com.tobeto.bootcampProject.business.abstracts.InstructorService;
-import com.tobeto.bootcampProject.business.abstracts.UserService;
 import com.tobeto.bootcampProject.business.constants.InstructorMessages;
 import com.tobeto.bootcampProject.business.requests.create.instructor.CreateInstructorRequest;
 import com.tobeto.bootcampProject.business.requests.update.instructor.UpdateInstructorRequest;
@@ -30,7 +29,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class InstructorManager implements InstructorService, UserService {
+public class InstructorManager implements InstructorService {
 
     private InstructorRepository instructorRepository;
     private ModelMapperService mapperService;
@@ -101,7 +100,6 @@ public class InstructorManager implements InstructorService, UserService {
         return new SuccessDataResult<List<GetAllInstructorResponse>>(responses);
     }
 
-    @Override
     public void checkIfEmailExists(String email) {
         Instructor instructor = instructorRepository.getByEmail(email);
         if (instructor != null) {
