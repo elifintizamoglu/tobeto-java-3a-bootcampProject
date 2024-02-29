@@ -8,7 +8,7 @@ import com.tobeto.bootcampProject.business.responses.create.instructor.CreateIns
 import com.tobeto.bootcampProject.business.responses.get.instructor.GetAllInstructorResponse;
 import com.tobeto.bootcampProject.business.responses.get.instructor.GetInstructorResponse;
 import com.tobeto.bootcampProject.business.responses.update.instructor.UpdateInstructorResponse;
-import com.tobeto.bootcampProject.core.exceptions.types.BusinessException;
+import com.tobeto.bootcampProject.business.rules.UserBusinessRules;
 import com.tobeto.bootcampProject.core.utilities.mapping.ModelMapperService;
 import com.tobeto.bootcampProject.core.utilities.paging.PageDto;
 import com.tobeto.bootcampProject.core.utilities.results.DataResult;
@@ -33,11 +33,12 @@ public class InstructorManager implements InstructorService {
 
     private InstructorRepository instructorRepository;
     private ModelMapperService mapperService;
+    private UserBusinessRules userBusinessRules;
 
     @Override
     public DataResult<CreateInstructorResponse> add(CreateInstructorRequest request) {
 
-        checkIfEmailExists(request.getEmail());
+        userBusinessRules.checkIfEmailExists(request.getEmail());
 
         Instructor instructor = mapperService.forRequest().map(request, Instructor.class);
         instructorRepository.save(instructor);
@@ -98,12 +99,5 @@ public class InstructorManager implements InstructorService {
         Page<Instructor> instructors = instructorRepository.findAll(pageable);
         List<GetAllInstructorResponse> responses = instructors.stream().map(instructor -> mapperService.forResponse().map(instructor, GetAllInstructorResponse.class)).toList();
         return new SuccessDataResult<List<GetAllInstructorResponse>>(responses);
-    }
-
-    public void checkIfEmailExists(String email) {
-        Instructor instructor = instructorRepository.getByEmail(email);
-        if (instructor != null) {
-            throw new BusinessException("This email is already used!");
-        }
     }
 }

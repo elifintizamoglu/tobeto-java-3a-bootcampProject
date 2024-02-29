@@ -8,7 +8,7 @@ import com.tobeto.bootcampProject.business.responses.create.employee.CreateEmplo
 import com.tobeto.bootcampProject.business.responses.get.employee.GetAllEmployeeResponse;
 import com.tobeto.bootcampProject.business.responses.get.employee.GetEmployeeResponse;
 import com.tobeto.bootcampProject.business.responses.update.employee.UpdateEmployeeResponse;
-import com.tobeto.bootcampProject.core.exceptions.types.BusinessException;
+import com.tobeto.bootcampProject.business.rules.UserBusinessRules;
 import com.tobeto.bootcampProject.core.utilities.mapping.ModelMapperService;
 import com.tobeto.bootcampProject.core.utilities.paging.PageDto;
 import com.tobeto.bootcampProject.core.utilities.results.DataResult;
@@ -33,11 +33,11 @@ public class EmployeeManager implements EmployeeService {
 
     private EmployeeRepository employeeRepository;
     private ModelMapperService mapperService;
-
+    private UserBusinessRules userBusinessRules;
     @Override
     public DataResult<CreateEmployeeResponse> add(CreateEmployeeRequest request) {
 
-        checkIfEmailExists(request.getEmail());
+        userBusinessRules.checkIfEmailExists(request.getEmail());
 
         Employee employee = mapperService.forRequest().map(request, Employee.class);
         employeeRepository.save(employee);
@@ -98,12 +98,5 @@ public class EmployeeManager implements EmployeeService {
         Page<Employee> employees = employeeRepository.findAll(pageable);
         List<GetAllEmployeeResponse> responses = employees.stream().map(employee -> mapperService.forResponse().map(employee, GetAllEmployeeResponse.class)).toList();
         return new SuccessDataResult<List<GetAllEmployeeResponse>>(responses);
-    }
-
-    public void checkIfEmailExists(String email) {
-        Employee employee = employeeRepository.getByEmail(email.trim());
-        if(employee != null){
-            throw new BusinessException("This email is already used!");
-        }
     }
 }

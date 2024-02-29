@@ -8,7 +8,7 @@ import com.tobeto.bootcampProject.business.responses.create.applicant.CreateAppl
 import com.tobeto.bootcampProject.business.responses.get.applicant.GetAllApplicantResponse;
 import com.tobeto.bootcampProject.business.responses.get.applicant.GetApplicantResponse;
 import com.tobeto.bootcampProject.business.responses.update.applicant.UpdateApplicantResponse;
-import com.tobeto.bootcampProject.core.exceptions.types.BusinessException;
+import com.tobeto.bootcampProject.business.rules.UserBusinessRules;
 import com.tobeto.bootcampProject.core.utilities.mapping.ModelMapperService;
 import com.tobeto.bootcampProject.core.utilities.paging.PageDto;
 import com.tobeto.bootcampProject.core.utilities.results.DataResult;
@@ -33,11 +33,12 @@ public class ApplicantManager implements ApplicantService {
 
     private ApplicantRepository applicantRepository;
     private ModelMapperService mapperService;
+    private UserBusinessRules userBusinessRules;
 
     @Override
     public DataResult<CreateApplicantResponse> add(CreateApplicantRequest request) {
 
-        checkIfEmailExists(request.getEmail());
+        userBusinessRules.checkIfEmailExists(request.getEmail());
         Applicant applicant = mapperService.forRequest().map(request, Applicant.class);
         applicantRepository.save(applicant);
         CreateApplicantResponse response = mapperService.forResponse().map(applicant, CreateApplicantResponse.class);
@@ -97,12 +98,5 @@ public class ApplicantManager implements ApplicantService {
         Page<Applicant> applicants = applicantRepository.findAll(pageable);
         List<GetAllApplicantResponse> responses = applicants.stream().map(applicant -> mapperService.forResponse().map(applicant, GetAllApplicantResponse.class)).toList();
         return new SuccessDataResult<List<GetAllApplicantResponse>>(responses);
-    }
-
-    public void checkIfEmailExists(String email) {
-        Applicant applicant = applicantRepository.getByEmail(email.trim());
-        if (applicant != null) {
-            throw new BusinessException("This email is already used!");
-        }
     }
 }
