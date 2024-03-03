@@ -21,7 +21,7 @@ public interface BootcampStateService {
 
     Result delete(int id);
 
-    DataResult<UpdateBootcampStateResponse> update(UpdateBootcampStateRequest request, int id);
+    DataResult<UpdateBootcampStateResponse> update(UpdateBootcampStateRequest request);
 
     DataResult<List<GetAllBootcampStateResponse>> getAllPage(PageDto pageDto);
 }

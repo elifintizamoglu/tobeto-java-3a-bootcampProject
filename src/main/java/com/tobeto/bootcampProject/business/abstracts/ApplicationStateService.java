@@ -22,7 +22,7 @@ public interface ApplicationStateService {
 
     Result delete(int id);
 
-    DataResult<UpdateApplicationStateResponse> update(UpdateApplicationStateRequest request, int id);
+    DataResult<UpdateApplicationStateResponse> update(UpdateApplicationStateRequest request);
 
     DataResult<List<GetAllApplicationStateResponse>> getAllPage(PageDto pageDto);
 }

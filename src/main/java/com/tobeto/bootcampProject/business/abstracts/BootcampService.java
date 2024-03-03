@@ -22,7 +22,7 @@ public interface BootcampService {
 
     Result delete(int id);
 
-    DataResult<UpdateBootcampResponse> update(UpdateBootcampRequest request, int id);
+    DataResult<UpdateBootcampResponse> update(UpdateBootcampRequest request);
 
     DataResult<List<GetAllBootcampResponse>> getAllPage(PageDto pageDto);
 }

@@ -21,7 +21,7 @@ public interface EmployeeService {
 
     Result delete(int id);
 
-    DataResult<UpdateEmployeeResponse> update(UpdateEmployeeRequest request, int id);
+    DataResult<UpdateEmployeeResponse> update(UpdateEmployeeRequest request);
 
     DataResult<List<GetAllEmployeeResponse>> getAllPage(PageDto pageDto);
 }

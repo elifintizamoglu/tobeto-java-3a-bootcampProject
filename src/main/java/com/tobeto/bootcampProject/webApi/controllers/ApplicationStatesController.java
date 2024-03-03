@@ -35,9 +35,9 @@ public class ApplicationStatesController extends BaseController {
         return handleResult(applicationStateService.delete(id));
     }
 
-    @PutMapping("update/{id}")
-    public ResponseEntity<?> update(@RequestBody UpdateApplicationStateRequest request, @PathVariable int id) {
-        return handleDataResult(applicationStateService.update(request, id));
+    @PutMapping("update")
+    public ResponseEntity<?> update(@RequestBody UpdateApplicationStateRequest request) {
+        return handleDataResult(applicationStateService.update(request));
     }
 
     @GetMapping("sort")

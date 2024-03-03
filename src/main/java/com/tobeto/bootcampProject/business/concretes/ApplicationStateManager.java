@@ -72,9 +72,9 @@ public class ApplicationStateManager implements ApplicationStateService {
     }
 
     @Override
-    public DataResult<UpdateApplicationStateResponse> update(UpdateApplicationStateRequest request, int id) {
+    public DataResult<UpdateApplicationStateResponse> update(UpdateApplicationStateRequest request) {
 
-        ApplicationState applicationState = applicationStateRepository.getById(id);
+        ApplicationState applicationState = applicationStateRepository.getById(request.getId());
         ApplicationState updatedApplicationState = mapperService.forRequest().map(request, ApplicationState.class);
 
         applicationState.setName(updatedApplicationState.getName() != null ? updatedApplicationState.getName() : applicationState.getName());

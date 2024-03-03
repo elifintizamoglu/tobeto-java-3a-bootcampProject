@@ -74,15 +74,16 @@ public class InstructorManager implements InstructorService {
     }
 
     @Override
-    public DataResult<UpdateInstructorResponse> update(UpdateInstructorRequest request, int id) {
+    public DataResult<UpdateInstructorResponse> update(UpdateInstructorRequest request) {
 
-        Instructor instructor = instructorRepository.findById(id).orElseThrow();
+        Instructor instructor = instructorRepository.findById(request.getId()).orElseThrow();
         Instructor updatedInstructor = mapperService.forRequest().map(request, Instructor.class);
 
         instructor.setFirstName(updatedInstructor.getFirstName() != null ? updatedInstructor.getFirstName() : instructor.getFirstName());
         instructor.setLastName(updatedInstructor.getLastName() != null ? updatedInstructor.getLastName() : instructor.getLastName());
         instructor.setCompanyName(updatedInstructor.getCompanyName() != null ? updatedInstructor.getCompanyName() : instructor.getCompanyName());
         instructor.setUserName(updatedInstructor.getUserName() != null ? updatedInstructor.getUserName() : instructor.getUserName());
+        instructor.setEmail(updatedInstructor.getEmail() != null ? updatedInstructor.getEmail() : instructor.getEmail());
         instructor.setNationalIdentity(updatedInstructor.getNationalIdentity() != null ? updatedInstructor.getNationalIdentity() : instructor.getNationalIdentity());
         instructor.setDateOfBirth((updatedInstructor.getDateOfBirth() != null ? updatedInstructor.getDateOfBirth() : instructor.getDateOfBirth()));
         instructorRepository.save(instructor);

@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateBootcampRequest {
+    private int id;
     private String name;
     private int instructorId;
     private LocalDate startDate;

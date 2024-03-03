@@ -69,8 +69,9 @@ public class BootcampManager implements BootcampService {
     }
 
     @Override
-    public DataResult<UpdateBootcampResponse> update(UpdateBootcampRequest request, int id) {
-        Bootcamp bootcamp = bootcampRepository.getById(id);
+    public DataResult<UpdateBootcampResponse> update(UpdateBootcampRequest request) {
+
+        Bootcamp bootcamp = bootcampRepository.getById(request.getId());
         Bootcamp updatedBootcamp = mapperService.forRequest().map(request, Bootcamp.class);
 
         bootcamp.setName(updatedBootcamp.getName() != null ? updatedBootcamp.getName() : bootcamp.getName());

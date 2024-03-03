@@ -35,9 +35,9 @@ public class BootcampsController extends BaseController {
         return handleResult(bootcampService.delete(id));
     }
 
-    @PutMapping("update/{id}")
-    public ResponseEntity<?> update(@RequestBody UpdateBootcampRequest request, @PathVariable int id) {
-        return handleDataResult(bootcampService.update(request, id));
+    @PutMapping("update")
+    public ResponseEntity<?> update(@RequestBody UpdateBootcampRequest request) {
+        return handleDataResult(bootcampService.update(request));
     }
 
     @GetMapping("sort")

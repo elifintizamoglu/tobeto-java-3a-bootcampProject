@@ -34,9 +34,9 @@ public class BlacklistController extends BaseController{
         return handleResult(blacklistService.delete(id));
     }
 
-    @PutMapping("update/{id}")
-    public ResponseEntity<?> update(@RequestBody UpdateBlacklistRequest request, @PathVariable int id) {
-        return handleDataResult(blacklistService.update(request, id));
+    @PutMapping("update")
+    public ResponseEntity<?> update(@RequestBody UpdateBlacklistRequest request) {
+        return handleDataResult(blacklistService.update(request));
     }
 
     @GetMapping("sort")

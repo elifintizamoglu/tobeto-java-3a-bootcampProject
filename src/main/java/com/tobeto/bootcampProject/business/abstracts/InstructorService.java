@@ -22,6 +22,6 @@ public interface InstructorService {
 
     Result delete(int id);
 
-    DataResult<UpdateInstructorResponse> update(UpdateInstructorRequest request, int id);
+    DataResult<UpdateInstructorResponse> update(UpdateInstructorRequest request);
     DataResult<List<GetAllInstructorResponse>> getAllPage(PageDto pageDto);
 }

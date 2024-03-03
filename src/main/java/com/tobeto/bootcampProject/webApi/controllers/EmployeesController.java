@@ -35,9 +35,9 @@ public class EmployeesController extends BaseController {
         return handleResult(employeeService.delete(id));
     }
 
-    @PutMapping("update/{id}")
-    public ResponseEntity<?> update(@RequestBody UpdateEmployeeRequest request, @PathVariable int id) {
-        return handleDataResult(employeeService.update(request, id));
+    @PutMapping("update/")
+    public ResponseEntity<?> update(@RequestBody UpdateEmployeeRequest request) {
+        return handleDataResult(employeeService.update(request));
     }
 
     @GetMapping("sort")

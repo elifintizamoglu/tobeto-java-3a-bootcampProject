@@ -21,7 +21,7 @@ public interface BlacklistService {
 
     Result delete(int id);
 
-    DataResult<UpdateBlacklistResponse> update(UpdateBlacklistRequest request, int id);
+    DataResult<UpdateBlacklistResponse> update(UpdateBlacklistRequest request);
 
     DataResult<List<GetAllBlacklistResponse>> getAllPage(PageDto pageDto);
 

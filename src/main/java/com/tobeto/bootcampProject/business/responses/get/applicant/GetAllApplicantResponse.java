@@ -8,10 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetAllApplicantResponse {
+
     private int id;
     private String userName;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String about;
 }

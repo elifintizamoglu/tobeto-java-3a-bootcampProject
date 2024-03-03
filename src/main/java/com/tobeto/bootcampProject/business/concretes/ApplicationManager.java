@@ -67,9 +67,8 @@ public class ApplicationManager implements ApplicationService {
     @Override
     public DataResult<UpdateApplicationResponse> update(UpdateApplicationRequest request) {
 
+        Application application = applicationRepository.getById(request.getId());
         Application updatedApplication = mapperService.forRequest().map(request, Application.class);
-        Application application = applicationRepository.getById(updatedApplication.getId());
-
 
         application.setApplicant(updatedApplication.getApplicant() != null ? updatedApplication.getApplicant() : application.getApplicant());
         application.setBootcamp(updatedApplication.getBootcamp() != null ? updatedApplication.getBootcamp() : application.getBootcamp());

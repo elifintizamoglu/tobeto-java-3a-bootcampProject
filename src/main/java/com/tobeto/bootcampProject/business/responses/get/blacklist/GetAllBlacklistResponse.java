@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetAllBlacklistResponse {
+    private int id;
     private String reason;
     private LocalDateTime date;
     private int applicantId;
