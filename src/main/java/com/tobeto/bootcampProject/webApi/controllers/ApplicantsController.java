@@ -37,7 +37,7 @@ public class ApplicantsController extends BaseController {
     }
 
     @PutMapping("update")
-    public ResponseEntity<?> update(@RequestBody UpdateApplicantRequest request) {
+    public ResponseEntity<?> update(@RequestBody @Valid UpdateApplicantRequest request) {
         return handleDataResult(applicantService.update(request));
     }
 
