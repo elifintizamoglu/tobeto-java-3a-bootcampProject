@@ -13,5 +13,5 @@ public class GetAllBlacklistResponse {
     private int id;
     private String reason;
     private LocalDateTime date;
-    private int applicantId;
+    private String applicantFirstName;
 }
