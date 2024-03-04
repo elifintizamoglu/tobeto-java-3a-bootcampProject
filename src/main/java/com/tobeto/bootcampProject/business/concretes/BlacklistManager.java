@@ -1,6 +1,7 @@
 package com.tobeto.bootcampProject.business.concretes;
 
 import com.tobeto.bootcampProject.business.abstracts.BlacklistService;
+import com.tobeto.bootcampProject.business.constants.BlacklistMessages;
 import com.tobeto.bootcampProject.business.requests.create.blacklist.CreateBlacklistRequest;
 import com.tobeto.bootcampProject.business.requests.update.blacklist.UpdateBlacklistRequest;
 import com.tobeto.bootcampProject.business.responses.create.blacklist.CreateBlacklistResponse;
@@ -43,7 +44,7 @@ public class BlacklistManager implements BlacklistService {
         blacklistRepository.save(blacklist);
         CreateBlacklistResponse response = mapperService.forResponse().map(blacklist, CreateBlacklistResponse.class);
 
-        return new SuccessDataResult<CreateBlacklistResponse>(response, "Applicant added to blacklist.");
+        return new SuccessDataResult<CreateBlacklistResponse>(response, BlacklistMessages.ApplicantAddedToBlacklist);
     }
 
     @Override
@@ -52,7 +53,7 @@ public class BlacklistManager implements BlacklistService {
         List<GetAllBlacklistResponse> blacklistResponses = blacklists.stream().map(blacklist -> mapperService.forResponse()
                 .map(blacklist, GetAllBlacklistResponse.class)).collect(Collectors.toList());
 
-        return new SuccessDataResult<List<GetAllBlacklistResponse>>(blacklistResponses, "All applicants in blacklist listed.");
+        return new SuccessDataResult<List<GetAllBlacklistResponse>>(blacklistResponses, BlacklistMessages.AllApplicantsInBlacklistListed);
     }
 
     @Override
@@ -60,14 +61,14 @@ public class BlacklistManager implements BlacklistService {
         Blacklist blacklist = blacklistRepository.getById(id);
         GetBlacklistResponse response = mapperService.forResponse()
                 .map(blacklist, GetBlacklistResponse.class);
-        return new SuccessDataResult<GetBlacklistResponse>(response, "Applicant in blacklist by id " + id + " listed.");
+        return new SuccessDataResult<GetBlacklistResponse>(response, BlacklistMessages.ApplicantInBlacklistListed);
     }
 
     @Override
     public Result delete(int id) {
         Blacklist blacklist = blacklistRepository.getById(id);
         blacklistRepository.delete(blacklist);
-        return new SuccessResult("Applicant is deleted from blacklist.");
+        return new SuccessResult(BlacklistMessages.ApplicantDeletedFromBlacklist);
     }
 
     @Override
@@ -81,7 +82,7 @@ public class BlacklistManager implements BlacklistService {
 
         UpdateBlacklistResponse response = mapperService.forResponse().map(blacklist, UpdateBlacklistResponse.class);
 
-        return new SuccessDataResult<UpdateBlacklistResponse>(response,"Applicant information in blacklist updated.");
+        return new SuccessDataResult<UpdateBlacklistResponse>(response, BlacklistMessages.ApplicantUpdatedInBlacklist);
     }
 
     @Override
