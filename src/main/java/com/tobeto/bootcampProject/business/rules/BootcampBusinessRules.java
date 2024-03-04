@@ -13,10 +13,17 @@ import java.util.List;
 public class BootcampBusinessRules {
     private BootcampRepository bootcampRepository;
 
-    public void checkIfInstructorHasBootcamps(int id){
-        List<Bootcamp> bootcamps = bootcampRepository.getByInstructorId(id);
-        if(!bootcamps.isEmpty()){
+    public void checkIfInstructorHasBootcamps(int id) {
+        List<Bootcamp> bootcamps = bootcampRepository.getAllByInstructorId(id);
+        if (!bootcamps.isEmpty()) {
             throw new BusinessException("This instructor has bootcamp(s) and can not be deleted!");
+        }
+    }
+
+    public void checkIfBootcampStateInUse(int id) {
+        List<Bootcamp> bootcamps = bootcampRepository.getAllByBootcampStateId(id);
+        if (!bootcamps.isEmpty()) {
+            throw new BusinessException("This bootcamp state has bootcamp(s) and can not be deleted!");
         }
     }
 }

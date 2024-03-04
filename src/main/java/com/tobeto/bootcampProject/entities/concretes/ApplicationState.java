@@ -20,6 +20,6 @@ public class ApplicationState extends BaseEntity<Integer> {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "applicationState", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "applicationState")
     private List<Application> applications;
 }

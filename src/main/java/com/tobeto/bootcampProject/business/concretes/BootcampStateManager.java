@@ -8,6 +8,7 @@ import com.tobeto.bootcampProject.business.responses.create.bootcampState.Create
 import com.tobeto.bootcampProject.business.responses.get.bootcampState.GetAllBootcampStateResponse;
 import com.tobeto.bootcampProject.business.responses.get.bootcampState.GetBootcampStateResponse;
 import com.tobeto.bootcampProject.business.responses.update.bootcampState.UpdateBootcampStateResponse;
+import com.tobeto.bootcampProject.business.rules.BootcampBusinessRules;
 import com.tobeto.bootcampProject.core.utilities.mapping.ModelMapperService;
 import com.tobeto.bootcampProject.core.utilities.paging.PageDto;
 import com.tobeto.bootcampProject.core.utilities.results.DataResult;
@@ -31,6 +32,7 @@ public class BootcampStateManager implements BootcampStateService {
 
     private BootcampStateRepository bootcampStateRepository;
     private ModelMapperService mapperService;
+    private BootcampBusinessRules bootcampBusinessRules;
 
     @Override
     public DataResult<CreateBootcampStateResponse> add(CreateBootcampStateRequest request) {
@@ -66,6 +68,7 @@ public class BootcampStateManager implements BootcampStateService {
     public Result delete(int id) {
 
         BootcampState bootcampState = bootcampStateRepository.getById(id);
+        bootcampBusinessRules.checkIfBootcampStateInUse(id);
         bootcampStateRepository.delete(bootcampState);
         return new SuccessResult(BootcampStateMessages.BootcampStateDeleted);
     }

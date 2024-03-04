@@ -20,6 +20,6 @@ public class BootcampState extends BaseEntity<Integer> {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "bootcampState", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "bootcampState")
     private List<Bootcamp> bootcamps;
 }

@@ -8,6 +8,7 @@ import com.tobeto.bootcampProject.business.responses.create.applicationState.Cre
 import com.tobeto.bootcampProject.business.responses.get.applicationState.GetAllApplicationStateResponse;
 import com.tobeto.bootcampProject.business.responses.get.applicationState.GetApplicationStateResponse;
 import com.tobeto.bootcampProject.business.responses.update.applicationState.UpdateApplicationStateResponse;
+import com.tobeto.bootcampProject.business.rules.ApplicationBusinessRules;
 import com.tobeto.bootcampProject.core.utilities.mapping.ModelMapperService;
 import com.tobeto.bootcampProject.core.utilities.paging.PageDto;
 import com.tobeto.bootcampProject.core.utilities.results.DataResult;
@@ -31,6 +32,7 @@ public class ApplicationStateManager implements ApplicationStateService {
 
     private ApplicationStateRepository applicationStateRepository;
     private ModelMapperService mapperService;
+    private ApplicationBusinessRules applicationBusinessRules;
 
     @Override
     public DataResult<CreateApplicationStateResponse> add(CreateApplicationStateRequest request) {
@@ -66,6 +68,7 @@ public class ApplicationStateManager implements ApplicationStateService {
     public Result delete(int id) {
 
         ApplicationState applicationState = applicationStateRepository.getById(id);
+        applicationBusinessRules.checkIfApplicationStateInUse(id);
         applicationStateRepository.delete(applicationState);
 
         return new SuccessResult(ApplicationStateMessages.ApplicationStateDeleted);
