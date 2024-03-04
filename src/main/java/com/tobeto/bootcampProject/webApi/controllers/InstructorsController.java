@@ -4,6 +4,7 @@ import com.tobeto.bootcampProject.business.abstracts.InstructorService;
 import com.tobeto.bootcampProject.business.requests.create.instructor.CreateInstructorRequest;
 import com.tobeto.bootcampProject.business.requests.update.instructor.UpdateInstructorRequest;
 import com.tobeto.bootcampProject.core.utilities.paging.PageDto;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,7 @@ public class InstructorsController extends BaseController {
     private InstructorService instructorService;
 
     @PostMapping
-    public ResponseEntity<?> add(@RequestBody CreateInstructorRequest request) {
+    public ResponseEntity<?> add(@RequestBody @Valid CreateInstructorRequest request) {
         return handleDataResult(instructorService.add(request));
     }
 
@@ -36,7 +37,7 @@ public class InstructorsController extends BaseController {
     }
 
     @PutMapping("update")
-    public ResponseEntity<?> update(@RequestBody UpdateInstructorRequest request) {
+    public ResponseEntity<?> update(@RequestBody @Valid UpdateInstructorRequest request) {
         return handleDataResult(instructorService.update(request));
     }
 

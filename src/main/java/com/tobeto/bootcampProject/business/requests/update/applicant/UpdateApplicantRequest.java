@@ -11,7 +11,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateApplicantRequest {
-    @NotNull(message = "Please enter a valid id!")
+
+    @Positive(message = "Id must be greater than 0!")
     private int id;
 
     @NotEmpty(message = "First name can not be empty!")
@@ -19,11 +20,11 @@ public class UpdateApplicantRequest {
     private String firstName;
 
     @NotEmpty(message = "Last name can not be empty!")
-    @Size(min = 2, max = 60, message = "Size must be at least 2 characters!")
+    @Size(min = 2, max = 60, message = "Last name must be at least 2 characters!")
     private String lastName;
 
     @NotEmpty(message = "Username can not be empty!")
-    @Size(min = 2, max = 30, message = "Size must be at least 2 characters!")
+    @Size(min = 2, max = 30, message = "User name must be at least 2 characters!")
     private String userName;
 
     @NotEmpty(message = "Email can not be empty!" )
@@ -35,7 +36,7 @@ public class UpdateApplicantRequest {
     private String password;
 
     @NotEmpty(message = "National identity can not be empty!")
-    @Size(min = 11, max = 11, message = "Size must be 11 numbers!")
+    @Size(min = 11, max = 11, message = "National identity must be 11 numbers!")
     private String nationalIdentity;
 
     @Past(message = "Date of birth must be int the past!")
