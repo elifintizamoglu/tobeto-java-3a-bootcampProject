@@ -24,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,35 +41,44 @@ public class EmployeeManager implements EmployeeService {
         userBusinessRules.checkIfEmailExists(request.getEmail());
 
         Employee employee = mapperService.forRequest().map(request, Employee.class);
+        employee.setCreatedDate(LocalDateTime.now());
         employeeRepository.save(employee);
 
         CreateEmployeeResponse response = mapperService.forResponse().
                 map(employee, CreateEmployeeResponse.class);
 
-        return new SuccessDataResult<CreateEmployeeResponse>(response, EmployeeMessages.EmployeeAdded);
+        return new SuccessDataResult<CreateEmployeeResponse>
+                (response, EmployeeMessages.EmployeeAdded);
     }
 
     @Override
     public DataResult<List<GetAllEmployeeResponse>> getAll() {
         List<Employee> employees = employeeRepository.findAll();
-        List<GetAllEmployeeResponse> employeeResponses = employees.stream().map(employee -> mapperService.forResponse()
+        List<GetAllEmployeeResponse> employeeResponses = employees.stream()
+                .map(employee -> mapperService.forResponse()
                 .map(employee, GetAllEmployeeResponse.class)).collect(Collectors.toList());
 
-        return new SuccessDataResult<List<GetAllEmployeeResponse>>(employeeResponses, EmployeeMessages.AllEmployeesListed);
+        return new SuccessDataResult<List<GetAllEmployeeResponse>>
+                (employeeResponses, EmployeeMessages.AllEmployeesListed);
     }
 
     @Override
     public DataResult<GetEmployeeResponse> getById(int id) {
+
         Employee employee = employeeRepository.getById(id);
         GetEmployeeResponse response = mapperService.forResponse()
                 .map(employee, GetEmployeeResponse.class);
-        return new SuccessDataResult<GetEmployeeResponse>(response, EmployeeMessages.EmployeeListed);
+
+        return new SuccessDataResult<GetEmployeeResponse>
+                (response, EmployeeMessages.EmployeeListed);
     }
 
     @Override
     public Result delete(int id) {
+
         Employee employee = employeeRepository.getById(id);
         employeeRepository.delete(employee);
+
         return new SuccessResult(EmployeeMessages.EmployeeDeleted);
     }
 
@@ -85,19 +95,27 @@ public class EmployeeManager implements EmployeeService {
         employee.setEmail(updatedEmployee.getEmail() != null ? updatedEmployee.getEmail() : employee.getEmail());
         employee.setNationalIdentity(updatedEmployee.getNationalIdentity() != null ? updatedEmployee.getNationalIdentity() : employee.getNationalIdentity());
         employee.setDateOfBirth((updatedEmployee.getDateOfBirth() != null ? updatedEmployee.getDateOfBirth() : employee.getDateOfBirth()));
+        employee.setUpdatedDate(LocalDateTime.now());
         employeeRepository.save(employee);
 
-        UpdateEmployeeResponse response = mapperService.forResponse().map(employee, UpdateEmployeeResponse.class);
+        UpdateEmployeeResponse response = mapperService.forResponse()
+                .map(employee, UpdateEmployeeResponse.class);
 
-        return new SuccessDataResult<UpdateEmployeeResponse>(response, EmployeeMessages.EmployeeUpdated);
+        return new SuccessDataResult<UpdateEmployeeResponse>
+                (response, EmployeeMessages.EmployeeUpdated);
     }
 
     @Override
     public DataResult<List<GetAllEmployeeResponse>> getAllPage(PageDto pageDto) {
+
         Sort sort = Sort.by(Sort.Direction.fromString(pageDto.getSortDirection()), pageDto.getSortBy());
         Pageable pageable = PageRequest.of(pageDto.getPageNumber(), pageDto.getPageSize(), sort);
         Page<Employee> employees = employeeRepository.findAll(pageable);
-        List<GetAllEmployeeResponse> responses = employees.stream().map(employee -> mapperService.forResponse().map(employee, GetAllEmployeeResponse.class)).toList();
+
+        List<GetAllEmployeeResponse> responses = employees.stream()
+                .map(employee -> mapperService.forResponse()
+                        .map(employee, GetAllEmployeeResponse.class)).toList();
+
         return new SuccessDataResult<List<GetAllEmployeeResponse>>(responses);
     }
 }

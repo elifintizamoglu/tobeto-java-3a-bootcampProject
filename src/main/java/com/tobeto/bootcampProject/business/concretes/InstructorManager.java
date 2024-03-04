@@ -25,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,36 +44,45 @@ public class InstructorManager implements InstructorService {
         userBusinessRules.checkIfEmailExists(request.getEmail());
 
         Instructor instructor = mapperService.forRequest().map(request, Instructor.class);
+        instructor.setCreatedDate(LocalDateTime.now());
         instructorRepository.save(instructor);
 
         CreateInstructorResponse response = mapperService.forResponse()
                 .map(instructor, CreateInstructorResponse.class);
+
         return new SuccessDataResult<CreateInstructorResponse>(response, InstructorMessages.InstructorAdded);
     }
 
     @Override
     public DataResult<List<GetAllInstructorResponse>> getAll() {
+
         List<Instructor> instructors = instructorRepository.findAll();
-        List<GetAllInstructorResponse> instructorResponses =
-                instructors.stream().map(instructor -> mapperService.forResponse()
+        List<GetAllInstructorResponse> instructorResponses = instructors.stream()
+                .map(instructor -> mapperService.forResponse()
                         .map(instructor, GetAllInstructorResponse.class)).collect(Collectors.toList());
 
-        return new SuccessDataResult<List<GetAllInstructorResponse>>(instructorResponses, InstructorMessages.AllInstructorsListed);
+        return new SuccessDataResult<List<GetAllInstructorResponse>>
+                (instructorResponses, InstructorMessages.AllInstructorsListed);
     }
 
     @Override
     public DataResult<GetInstructorResponse> getById(int id) {
+
         Instructor instructor = instructorRepository.getById(id);
         GetInstructorResponse response = mapperService.forResponse()
                 .map(instructor, GetInstructorResponse.class);
-        return new SuccessDataResult<GetInstructorResponse>(response, InstructorMessages.InstructorListed);
+
+        return new SuccessDataResult<GetInstructorResponse>
+                (response, InstructorMessages.InstructorListed);
     }
 
     @Override
     public Result delete(int id) {
+
         Instructor instructor = instructorRepository.getById(id);
         bootcampBusinessRules.checkIfInstructorHasBootcamps(id);
         instructorRepository.delete(instructor);
+
         return new SuccessResult(InstructorMessages.InstructorDeleted);
     }
 
@@ -89,19 +99,27 @@ public class InstructorManager implements InstructorService {
         instructor.setEmail(updatedInstructor.getEmail() != null ? updatedInstructor.getEmail() : instructor.getEmail());
         instructor.setNationalIdentity(updatedInstructor.getNationalIdentity() != null ? updatedInstructor.getNationalIdentity() : instructor.getNationalIdentity());
         instructor.setDateOfBirth((updatedInstructor.getDateOfBirth() != null ? updatedInstructor.getDateOfBirth() : instructor.getDateOfBirth()));
+        instructor.setUpdatedDate(LocalDateTime.now());
         instructorRepository.save(instructor);
 
-        UpdateInstructorResponse response = mapperService.forResponse().map(instructor, UpdateInstructorResponse.class);
+        UpdateInstructorResponse response = mapperService.forResponse()
+                .map(instructor, UpdateInstructorResponse.class);
 
-        return new SuccessDataResult<UpdateInstructorResponse>(response, InstructorMessages.InstructorUpdated);
+        return new SuccessDataResult<UpdateInstructorResponse>
+                (response, InstructorMessages.InstructorUpdated);
     }
 
     @Override
     public DataResult<List<GetAllInstructorResponse>> getAllPage(PageDto pageDto) {
+
         Sort sort = Sort.by(Sort.Direction.fromString(pageDto.getSortDirection()), pageDto.getSortBy());
         Pageable pageable = PageRequest.of(pageDto.getPageNumber(), pageDto.getPageSize(), sort);
         Page<Instructor> instructors = instructorRepository.findAll(pageable);
-        List<GetAllInstructorResponse> responses = instructors.stream().map(instructor -> mapperService.forResponse().map(instructor, GetAllInstructorResponse.class)).toList();
+
+        List<GetAllInstructorResponse> responses = instructors.stream()
+                .map(instructor -> mapperService.forResponse()
+                        .map(instructor, GetAllInstructorResponse.class)).toList();
+
         return new SuccessDataResult<List<GetAllInstructorResponse>>(responses);
     }
 }

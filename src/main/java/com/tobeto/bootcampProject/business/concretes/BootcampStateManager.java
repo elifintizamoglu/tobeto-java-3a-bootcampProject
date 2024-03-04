@@ -24,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -38,20 +39,26 @@ public class BootcampStateManager implements BootcampStateService {
     public DataResult<CreateBootcampStateResponse> add(CreateBootcampStateRequest request) {
 
         BootcampState bootcampState = mapperService.forRequest().map(request, BootcampState.class);
+        bootcampState.setCreatedDate(LocalDateTime.now());
         bootcampStateRepository.save(bootcampState);
-        CreateBootcampStateResponse response = mapperService.forResponse().map(bootcampState, CreateBootcampStateResponse.class);
 
-        return new SuccessDataResult<CreateBootcampStateResponse>(response, BootcampStateMessages.BootcampStateAdded);
+        CreateBootcampStateResponse response = mapperService.forResponse()
+                .map(bootcampState, CreateBootcampStateResponse.class);
+
+        return new SuccessDataResult<CreateBootcampStateResponse>
+                (response, BootcampStateMessages.BootcampStateAdded);
     }
 
     @Override
     public DataResult<List<GetAllBootcampStateResponse>> getAll() {
 
         List<BootcampState> bootcampStates = bootcampStateRepository.findAll();
-        List<GetAllBootcampStateResponse> bootcampStateResponses = bootcampStates.stream().map(bootcampState -> mapperService.forResponse()
-                .map(bootcampState, GetAllBootcampStateResponse.class)).toList();
+        List<GetAllBootcampStateResponse> bootcampStateResponses = bootcampStates.stream()
+                .map(bootcampState -> mapperService.forResponse()
+                        .map(bootcampState, GetAllBootcampStateResponse.class)).toList();
 
-        return new SuccessDataResult<List<GetAllBootcampStateResponse>>(bootcampStateResponses, BootcampStateMessages.AllBootcampStatesListed);
+        return new SuccessDataResult<List<GetAllBootcampStateResponse>>
+                (bootcampStateResponses, BootcampStateMessages.AllBootcampStatesListed);
     }
 
     @Override
@@ -61,7 +68,8 @@ public class BootcampStateManager implements BootcampStateService {
         GetBootcampStateResponse response = mapperService.forResponse()
                 .map(bootcampState, GetBootcampStateResponse.class);
 
-        return new SuccessDataResult<GetBootcampStateResponse>(response, BootcampStateMessages.BootcampStateListed);
+        return new SuccessDataResult<GetBootcampStateResponse>
+                (response, BootcampStateMessages.BootcampStateListed);
     }
 
     @Override
@@ -70,6 +78,7 @@ public class BootcampStateManager implements BootcampStateService {
         BootcampState bootcampState = bootcampStateRepository.getById(id);
         bootcampBusinessRules.checkIfBootcampStateInUse(id);
         bootcampStateRepository.delete(bootcampState);
+
         return new SuccessResult(BootcampStateMessages.BootcampStateDeleted);
     }
 
@@ -80,18 +89,27 @@ public class BootcampStateManager implements BootcampStateService {
         BootcampState updatedBootcampState = mapperService.forRequest().map(request, BootcampState.class);
 
         bootcampState.setName(updatedBootcampState.getName() != null ? updatedBootcampState.getName() : bootcampState.getName());
+        bootcampState.setUpdatedDate(LocalDateTime.now());
         bootcampStateRepository.save(bootcampState);
 
-        UpdateBootcampStateResponse response = mapperService.forResponse().map(bootcampState, UpdateBootcampStateResponse.class);
-        return new SuccessDataResult<UpdateBootcampStateResponse>(response, BootcampStateMessages.BootcampStateUpdated);
+        UpdateBootcampStateResponse response = mapperService.forResponse()
+                .map(bootcampState, UpdateBootcampStateResponse.class);
+
+        return new SuccessDataResult<UpdateBootcampStateResponse>
+                (response, BootcampStateMessages.BootcampStateUpdated);
     }
 
     @Override
     public DataResult<List<GetAllBootcampStateResponse>> getAllPage(PageDto pageDto) {
+
         Sort sort = Sort.by(Sort.Direction.fromString(pageDto.getSortDirection()), pageDto.getSortBy());
         Pageable pageable = PageRequest.of(pageDto.getPageNumber(), pageDto.getPageSize(), sort);
         Page<BootcampState> bootcampStates = bootcampStateRepository.findAll(pageable);
-        List<GetAllBootcampStateResponse> responses = bootcampStates.stream().map(bootcampState -> mapperService.forResponse().map(bootcampState, GetAllBootcampStateResponse.class)).toList();
+
+        List<GetAllBootcampStateResponse> responses = bootcampStates.stream()
+                .map(bootcampState -> mapperService.forResponse()
+                        .map(bootcampState, GetAllBootcampStateResponse.class)).toList();
+
         return new SuccessDataResult<List<GetAllBootcampStateResponse>>(responses);
     }
 }

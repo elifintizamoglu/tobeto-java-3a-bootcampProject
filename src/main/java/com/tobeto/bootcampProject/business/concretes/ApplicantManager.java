@@ -24,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,34 +41,45 @@ public class ApplicantManager implements ApplicantService {
 
         userBusinessRules.checkIfEmailExists(request.getEmail());
         Applicant applicant = mapperService.forRequest().map(request, Applicant.class);
+        applicant.setCreatedDate(LocalDateTime.now());
         applicantRepository.save(applicant);
-        CreateApplicantResponse response = mapperService.forResponse().map(applicant, CreateApplicantResponse.class);
 
-        return new SuccessDataResult<CreateApplicantResponse>(response, ApplicantMessages.ApplicantAdded);
+        CreateApplicantResponse response = mapperService.forResponse()
+                .map(applicant, CreateApplicantResponse.class);
+
+        return new SuccessDataResult<CreateApplicantResponse>
+                (response, ApplicantMessages.ApplicantAdded);
     }
 
     @Override
     public DataResult<List<GetAllApplicantResponse>> getAll() {
 
         List<Applicant> applicants = applicantRepository.findAll();
-        List<GetAllApplicantResponse> applicantResponses = applicants.stream().map(applicant -> mapperService.forResponse()
-                .map(applicant, GetAllApplicantResponse.class)).collect(Collectors.toList());
+        List<GetAllApplicantResponse> applicantResponses = applicants.stream()
+                .map(applicant -> mapperService.forResponse()
+                        .map(applicant, GetAllApplicantResponse.class)).collect(Collectors.toList());
 
-        return new SuccessDataResult<List<GetAllApplicantResponse>>(applicantResponses, ApplicantMessages.AllApplicantsListed);
+        return new SuccessDataResult<List<GetAllApplicantResponse>>
+                (applicantResponses, ApplicantMessages.AllApplicantsListed);
     }
 
     @Override
     public DataResult<GetApplicantResponse> getById(int id) {
+
         Applicant applicant = applicantRepository.getById(id);
         GetApplicantResponse response = mapperService.forResponse()
                 .map(applicant, GetApplicantResponse.class);
-        return new SuccessDataResult<GetApplicantResponse>(response, ApplicantMessages.ApplicantListed);
+
+        return new SuccessDataResult<GetApplicantResponse>
+                (response, ApplicantMessages.ApplicantListed);
     }
 
     @Override
     public Result delete(int id) {
+
         Applicant applicant = applicantRepository.getById(id);
         applicantRepository.delete(applicant);
+
         return new SuccessResult(ApplicantMessages.ApplicantDeleted);
     }
 
@@ -84,19 +96,27 @@ public class ApplicantManager implements ApplicantService {
         applicant.setUserName(updatedApplicant.getUserName() != null ? updatedApplicant.getUserName() : applicant.getUserName());
         applicant.setNationalIdentity(updatedApplicant.getNationalIdentity() != null ? updatedApplicant.getNationalIdentity() : applicant.getNationalIdentity());
         applicant.setDateOfBirth((updatedApplicant.getDateOfBirth() != null ? updatedApplicant.getDateOfBirth() : applicant.getDateOfBirth()));
+        applicant.setUpdatedDate(LocalDateTime.now());
         applicantRepository.save(applicant);
 
-        UpdateApplicantResponse response = mapperService.forResponse().map(applicant, UpdateApplicantResponse.class);
+        UpdateApplicantResponse response = mapperService.forResponse()
+                .map(applicant, UpdateApplicantResponse.class);
 
-        return new SuccessDataResult<UpdateApplicantResponse>(response, ApplicantMessages.ApplicantUpdated);
+        return new SuccessDataResult<UpdateApplicantResponse>
+                (response, ApplicantMessages.ApplicantUpdated);
     }
 
     @Override
     public DataResult<List<GetAllApplicantResponse>> getAllPage(PageDto pageDto) {
+
         Sort sort = Sort.by(Sort.Direction.fromString(pageDto.getSortDirection()), pageDto.getSortBy());
         Pageable pageable = PageRequest.of(pageDto.getPageNumber(), pageDto.getPageSize(), sort);
         Page<Applicant> applicants = applicantRepository.findAll(pageable);
-        List<GetAllApplicantResponse> responses = applicants.stream().map(applicant -> mapperService.forResponse().map(applicant, GetAllApplicantResponse.class)).toList();
+
+        List<GetAllApplicantResponse> responses = applicants.stream()
+                .map(applicant -> mapperService.forResponse()
+                        .map(applicant, GetAllApplicantResponse.class)).toList();
+
         return new SuccessDataResult<List<GetAllApplicantResponse>>(responses);
     }
 }

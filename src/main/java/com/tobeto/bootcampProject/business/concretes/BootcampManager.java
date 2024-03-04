@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -36,28 +37,37 @@ public class BootcampManager implements BootcampService {
     public DataResult<CreateBootcampResponse> add(CreateBootcampRequest request) {
 
         Bootcamp bootcamp = mapperService.forRequest().map(request, Bootcamp.class);
+        bootcamp.setCreatedDate(LocalDateTime.now());
         bootcampRepository.save(bootcamp);
-        CreateBootcampResponse response = mapperService.forResponse().map(bootcamp, CreateBootcampResponse.class);
 
-        return new SuccessDataResult<CreateBootcampResponse>(response, BootcampMessages.BootcampAdded);
+        CreateBootcampResponse response = mapperService.forResponse()
+                .map(bootcamp, CreateBootcampResponse.class);
+
+        return new SuccessDataResult<CreateBootcampResponse>
+                (response, BootcampMessages.BootcampAdded);
     }
 
     @Override
     public DataResult<List<GetAllBootcampResponse>> getAll() {
 
         List<Bootcamp> bootcamps = bootcampRepository.findAll();
-        List<GetAllBootcampResponse> bootcampResponses = bootcamps.stream().map(bootcamp -> mapperService.forResponse()
-                .map(bootcamp, GetAllBootcampResponse.class)).toList();
+        List<GetAllBootcampResponse> bootcampResponses = bootcamps.stream()
+                .map(bootcamp -> mapperService.forResponse()
+                        .map(bootcamp, GetAllBootcampResponse.class)).toList();
 
-        return new SuccessDataResult<List<GetAllBootcampResponse>>(bootcampResponses, BootcampMessages.AllBootcampsListed);
+        return new SuccessDataResult<List<GetAllBootcampResponse>>
+                (bootcampResponses, BootcampMessages.AllBootcampsListed);
     }
 
     @Override
     public DataResult<GetBootcampResponse> getById(int id) {
+
         Bootcamp bootcamp = bootcampRepository.getById(id);
         GetBootcampResponse response = mapperService.forResponse()
                 .map(bootcamp, GetBootcampResponse.class);
-        return new SuccessDataResult<GetBootcampResponse>(response, BootcampMessages.BootcampListed);
+
+        return new SuccessDataResult<GetBootcampResponse>
+                (response, BootcampMessages.BootcampListed);
     }
 
     @Override
@@ -65,6 +75,7 @@ public class BootcampManager implements BootcampService {
 
         Bootcamp bootcamp = bootcampRepository.getById(id);
         bootcampRepository.delete(bootcamp);
+
         return new SuccessResult(BootcampMessages.BootcampDeleted);
     }
 
@@ -79,18 +90,27 @@ public class BootcampManager implements BootcampService {
         bootcamp.setStartDate(updatedBootcamp.getStartDate() != null ? updatedBootcamp.getStartDate() : bootcamp.getStartDate());
         bootcamp.setEndDate(updatedBootcamp.getEndDate() != null ? updatedBootcamp.getEndDate() : bootcamp.getEndDate());
         bootcamp.setBootcampState(updatedBootcamp.getBootcampState() != null ? updatedBootcamp.getBootcampState() : bootcamp.getBootcampState());
+        bootcamp.setUpdatedDate(LocalDateTime.now());
         bootcampRepository.save(bootcamp);
 
-        UpdateBootcampResponse response = mapperService.forResponse().map(bootcamp, UpdateBootcampResponse.class);
-        return new SuccessDataResult<UpdateBootcampResponse>(response, BootcampMessages.BootcampUpdated);
+        UpdateBootcampResponse response = mapperService.forResponse()
+                .map(bootcamp, UpdateBootcampResponse.class);
+
+        return new SuccessDataResult<UpdateBootcampResponse>
+                (response, BootcampMessages.BootcampUpdated);
     }
 
     @Override
     public DataResult<List<GetAllBootcampResponse>> getAllPage(PageDto pageDto) {
+
         Sort sort = Sort.by(Sort.Direction.fromString(pageDto.getSortDirection()), pageDto.getSortBy());
         Pageable pageable = PageRequest.of(pageDto.getPageNumber(), pageDto.getPageSize(), sort);
         Page<Bootcamp> bootcamps = bootcampRepository.findAll(pageable);
-        List<GetAllBootcampResponse> responses = bootcamps.stream().map(bootcamp -> mapperService.forResponse().map(bootcamp, GetAllBootcampResponse.class)).toList();
+
+        List<GetAllBootcampResponse> responses = bootcamps.stream()
+                .map(bootcamp -> mapperService.forResponse()
+                        .map(bootcamp, GetAllBootcampResponse.class)).toList();
+
         return new SuccessDataResult<List<GetAllBootcampResponse>>(responses);
     }
 }

@@ -24,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -38,11 +39,14 @@ public class ApplicationStateManager implements ApplicationStateService {
     public DataResult<CreateApplicationStateResponse> add(CreateApplicationStateRequest request) {
 
         ApplicationState applicationState = mapperService.forRequest().map(request, ApplicationState.class);
+        applicationState.setCreatedDate(LocalDateTime.now());
         applicationStateRepository.save(applicationState);
 
-        CreateApplicationStateResponse response = mapperService.forResponse().map(applicationState, CreateApplicationStateResponse.class);
+        CreateApplicationStateResponse response = mapperService.forResponse()
+                .map(applicationState, CreateApplicationStateResponse.class);
 
-        return new SuccessDataResult<CreateApplicationStateResponse>(response, ApplicationStateMessages.ApplicationStateAdded);
+        return new SuccessDataResult<CreateApplicationStateResponse>
+                (response, ApplicationStateMessages.ApplicationStateAdded);
     }
 
     @Override
@@ -50,18 +54,22 @@ public class ApplicationStateManager implements ApplicationStateService {
 
         List<ApplicationState> applicationStates = applicationStateRepository.findAll();
         List<GetAllApplicationStateResponse> applicationStateResponses = applicationStates.stream()
-                .map(applicationState -> mapperService.forResponse().map(applicationState, GetAllApplicationStateResponse.class)).toList();
+                .map(applicationState -> mapperService.forResponse()
+                        .map(applicationState, GetAllApplicationStateResponse.class)).toList();
 
-        return new SuccessDataResult<List<GetAllApplicationStateResponse>>(applicationStateResponses, ApplicationStateMessages.AllApplicationStatesListed);
+        return new SuccessDataResult<List<GetAllApplicationStateResponse>>
+                (applicationStateResponses, ApplicationStateMessages.AllApplicationStatesListed);
     }
 
     @Override
     public DataResult<GetApplicationStateResponse> getById(int id) {
 
         ApplicationState applicationState = applicationStateRepository.getById(id);
-        GetApplicationStateResponse response = mapperService.forResponse().map(applicationState, GetApplicationStateResponse.class);
+        GetApplicationStateResponse response = mapperService.forResponse()
+                .map(applicationState, GetApplicationStateResponse.class);
 
-        return new SuccessDataResult<GetApplicationStateResponse>(response, ApplicationStateMessages.ApplicationStateListed);
+        return new SuccessDataResult<GetApplicationStateResponse>
+                (response, ApplicationStateMessages.ApplicationStateListed);
     }
 
     @Override
@@ -81,19 +89,27 @@ public class ApplicationStateManager implements ApplicationStateService {
         ApplicationState updatedApplicationState = mapperService.forRequest().map(request, ApplicationState.class);
 
         applicationState.setName(updatedApplicationState.getName() != null ? updatedApplicationState.getName() : applicationState.getName());
+        applicationState.setUpdatedDate(LocalDateTime.now());
         applicationStateRepository.save(applicationState);
 
-        UpdateApplicationStateResponse response = mapperService.forResponse().map(applicationState, UpdateApplicationStateResponse.class);
+        UpdateApplicationStateResponse response = mapperService.forResponse()
+                .map(applicationState, UpdateApplicationStateResponse.class);
 
-        return new SuccessDataResult<UpdateApplicationStateResponse>(response, ApplicationStateMessages.ApplicationStateUpdated);
+        return new SuccessDataResult<UpdateApplicationStateResponse>
+                (response, ApplicationStateMessages.ApplicationStateUpdated);
     }
 
     @Override
     public DataResult<List<GetAllApplicationStateResponse>> getAllPage(PageDto pageDto) {
+
         Sort sort = Sort.by(Sort.Direction.fromString(pageDto.getSortDirection()), pageDto.getSortBy());
         Pageable pageable = PageRequest.of(pageDto.getPageNumber(), pageDto.getPageSize(), sort);
         Page<ApplicationState> applicationStates = applicationStateRepository.findAll(pageable);
-        List<GetAllApplicationStateResponse> responses = applicationStates.stream().map(applicationState -> mapperService.forResponse().map(applicationState, GetAllApplicationStateResponse.class)).toList();
+
+        List<GetAllApplicationStateResponse> responses = applicationStates.stream()
+                .map(applicationState -> mapperService.forResponse()
+                        .map(applicationState, GetAllApplicationStateResponse.class)).toList();
+
         return new SuccessDataResult<List<GetAllApplicationStateResponse>>(responses);
     }
 }

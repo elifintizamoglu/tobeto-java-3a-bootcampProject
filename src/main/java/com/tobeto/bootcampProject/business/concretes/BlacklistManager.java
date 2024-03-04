@@ -24,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,33 +42,45 @@ public class BlacklistManager implements BlacklistService {
         blacklistBusinessRules.checkIfApplicantInBlacklist(request.getApplicantId());
 
         Blacklist blacklist = mapperService.forRequest().map(request, Blacklist.class);
+        blacklist.setCreatedDate(LocalDateTime.now());
         blacklistRepository.save(blacklist);
-        CreateBlacklistResponse response = mapperService.forResponse().map(blacklist, CreateBlacklistResponse.class);
 
-        return new SuccessDataResult<CreateBlacklistResponse>(response, BlacklistMessages.ApplicantAddedToBlacklist);
+        CreateBlacklistResponse response = mapperService.forResponse()
+                .map(blacklist, CreateBlacklistResponse.class);
+
+        return new SuccessDataResult<CreateBlacklistResponse>
+                (response, BlacklistMessages.ApplicantAddedToBlacklist);
     }
 
     @Override
     public DataResult<List<GetAllBlacklistResponse>> getAll() {
-        List<Blacklist> blacklists = blacklistRepository.findAll();
-        List<GetAllBlacklistResponse> blacklistResponses = blacklists.stream().map(blacklist -> mapperService.forResponse()
-                .map(blacklist, GetAllBlacklistResponse.class)).collect(Collectors.toList());
 
-        return new SuccessDataResult<List<GetAllBlacklistResponse>>(blacklistResponses, BlacklistMessages.AllApplicantsInBlacklistListed);
+        List<Blacklist> blacklists = blacklistRepository.findAll();
+        List<GetAllBlacklistResponse> blacklistResponses = blacklists.stream()
+                .map(blacklist -> mapperService.forResponse()
+                        .map(blacklist, GetAllBlacklistResponse.class)).collect(Collectors.toList());
+
+        return new SuccessDataResult<List<GetAllBlacklistResponse>>
+                (blacklistResponses, BlacklistMessages.AllApplicantsInBlacklistListed);
     }
 
     @Override
     public DataResult<GetBlacklistResponse> getById(int id) {
+
         Blacklist blacklist = blacklistRepository.getById(id);
         GetBlacklistResponse response = mapperService.forResponse()
                 .map(blacklist, GetBlacklistResponse.class);
-        return new SuccessDataResult<GetBlacklistResponse>(response, BlacklistMessages.ApplicantInBlacklistListed);
+
+        return new SuccessDataResult<GetBlacklistResponse>
+                (response, BlacklistMessages.ApplicantInBlacklistListed);
     }
 
     @Override
     public Result delete(int id) {
+
         Blacklist blacklist = blacklistRepository.getById(id);
         blacklistRepository.delete(blacklist);
+
         return new SuccessResult(BlacklistMessages.ApplicantDeletedFromBlacklist);
     }
 
@@ -78,19 +91,27 @@ public class BlacklistManager implements BlacklistService {
         Blacklist updatedblacklist = mapperService.forRequest().map(request, Blacklist.class);
 
         blacklist.setReason(updatedblacklist.getReason() != null ? updatedblacklist.getReason() : blacklist.getReason());
+        blacklist.setUpdatedDate(LocalDateTime.now());
         blacklistRepository.save(blacklist);
 
-        UpdateBlacklistResponse response = mapperService.forResponse().map(blacklist, UpdateBlacklistResponse.class);
+        UpdateBlacklistResponse response = mapperService.forResponse()
+                .map(blacklist, UpdateBlacklistResponse.class);
 
-        return new SuccessDataResult<UpdateBlacklistResponse>(response, BlacklistMessages.ApplicantUpdatedInBlacklist);
+        return new SuccessDataResult<UpdateBlacklistResponse>
+                (response, BlacklistMessages.ApplicantUpdatedInBlacklist);
     }
 
     @Override
     public DataResult<List<GetAllBlacklistResponse>> getAllPage(PageDto pageDto) {
+
         Sort sort = Sort.by(Sort.Direction.fromString(pageDto.getSortDirection()), pageDto.getSortBy());
         Pageable pageable = PageRequest.of(pageDto.getPageNumber(), pageDto.getPageSize(), sort);
         Page<Blacklist> blacklists = blacklistRepository.findAll(pageable);
-        List<GetAllBlacklistResponse> responses = blacklists.stream().map(blacklist -> mapperService.forResponse().map(blacklist, GetAllBlacklistResponse.class)).toList();
+
+        List<GetAllBlacklistResponse> responses = blacklists.stream()
+                .map(blacklist -> mapperService.forResponse()
+                        .map(blacklist, GetAllBlacklistResponse.class)).toList();
+
         return new SuccessDataResult<List<GetAllBlacklistResponse>>(responses);
     }
 }
