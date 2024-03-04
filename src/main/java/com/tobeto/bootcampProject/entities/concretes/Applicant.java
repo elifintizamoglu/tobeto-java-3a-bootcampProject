@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,6 +20,9 @@ public class Applicant extends User {
     @Column(name = "about")
     private String about;
 
-    @OneToOne(mappedBy = "applicant")
+    @OneToOne(mappedBy = "applicant", cascade = CascadeType.REMOVE)
     private Blacklist blacklist;
+
+    @OneToMany(mappedBy = "applicant", cascade = CascadeType.REMOVE)
+    private List<Application> applications;
 }

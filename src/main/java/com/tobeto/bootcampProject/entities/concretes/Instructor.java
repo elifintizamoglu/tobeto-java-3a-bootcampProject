@@ -20,6 +20,6 @@ public class Instructor extends User {
     @Column(name = "companyName")
     private String companyName;
 
-    @OneToMany(mappedBy = "instructor" , cascade=CascadeType.DETACH)
+    @OneToMany(mappedBy = "instructor")
     private List<Bootcamp> bootcamps;
 }

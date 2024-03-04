@@ -8,6 +8,7 @@ import com.tobeto.bootcampProject.business.responses.create.instructor.CreateIns
 import com.tobeto.bootcampProject.business.responses.get.instructor.GetAllInstructorResponse;
 import com.tobeto.bootcampProject.business.responses.get.instructor.GetInstructorResponse;
 import com.tobeto.bootcampProject.business.responses.update.instructor.UpdateInstructorResponse;
+import com.tobeto.bootcampProject.business.rules.BootcampBusinessRules;
 import com.tobeto.bootcampProject.business.rules.UserBusinessRules;
 import com.tobeto.bootcampProject.core.utilities.mapping.ModelMapperService;
 import com.tobeto.bootcampProject.core.utilities.paging.PageDto;
@@ -34,6 +35,7 @@ public class InstructorManager implements InstructorService {
     private InstructorRepository instructorRepository;
     private ModelMapperService mapperService;
     private UserBusinessRules userBusinessRules;
+    private BootcampBusinessRules bootcampBusinessRules;
 
     @Override
     public DataResult<CreateInstructorResponse> add(CreateInstructorRequest request) {
@@ -69,6 +71,7 @@ public class InstructorManager implements InstructorService {
     @Override
     public Result delete(int id) {
         Instructor instructor = instructorRepository.getById(id);
+        bootcampBusinessRules.checkIfInstructorHasBootcamps(id);
         instructorRepository.delete(instructor);
         return new SuccessResult(InstructorMessages.InstructorDeleted);
     }

@@ -18,11 +18,6 @@ import java.time.LocalDateTime;
 @Table(name = "blacklists")
 public class Blacklist extends BaseEntity<Integer> {
 
-    /*@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
-    private int id;*/
-
     @Column(name = "reason")
     private String reason;
 
