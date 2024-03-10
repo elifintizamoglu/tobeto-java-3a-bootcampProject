@@ -38,6 +38,4 @@ public abstract class LoggerServiceBase {
     }
 
     public abstract void log(String methodName, List<LogParameter> logParameters, String userName);
-
-
 }

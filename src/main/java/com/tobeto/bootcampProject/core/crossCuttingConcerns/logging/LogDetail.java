@@ -25,4 +25,5 @@ public class LogDetail {
     private String user;
 
     private List<LogParameter> logParameters;
+
 }
