@@ -22,11 +22,14 @@ public class MongoDbLogger extends LoggerServiceBase {
 
     @Override
     public void log(String methodName, List<LogParameter> logParameters, String userName) {
-        LogDetail logDetail = new LogDetail();
-        logDetail.setMethodName(methodName);
-        logDetail.setLogParameters(logParameters);
-        logDetail.setUser(userName);
-        info(logDetail.toString());
-        mongoTemplate.save(logDetail);
+
+        LogDetail detail = new LogDetail();
+
+        detail.setMethodName(methodName);
+        detail.setLogParameters(logParameters);
+        detail.setUser(userName);
+
+        info(detail.toString());
+        mongoTemplate.save(detail);
     }
 }
